@@ -75,7 +75,6 @@ export function LoginScreen({ navigation }) {
   );
 
   const login = async (data: FormInputs) => {
-    console.log(data);
     const response = await supabase.auth.signIn(data);
     if (response.error) {
       ErrorAlert({
