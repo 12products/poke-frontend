@@ -24,22 +24,21 @@ export default function Navigation({
 }: {
   colorScheme: ColorSchemeName;
 }) {
-  console.log(supabase.auth.session());
-  const [auth, setAuth] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setAuth(!!supabase.auth.session());
+    setIsAuthenticated(!!supabase.auth.session());
     supabase.auth.onAuthStateChange((_event, session) => {
       console.log("CURR SESSION:", session);
-      setAuth(!!session);
+      setIsAuthenticated(!!session);
     });
-  });
+  }, []);
   return (
     <NavigationContainer
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
     >
-      {auth ? <HomeScreenStack /> : <AuthScreenStack />}
+      {isAuthenticated ? <HomeScreenStack /> : <AuthScreenStack />}
     </NavigationContainer>
   );
 }

@@ -74,10 +74,9 @@ export function LoginScreen({ navigation }) {
     []
   );
 
-  const doLogin = async (data: FormInputs) => {
+  const login = async (data: FormInputs) => {
     console.log(data);
     const response = await supabase.auth.signIn(data);
-    console.log({ response });
     if (response.error) {
       ErrorAlert({
         title: "Error Logging in User",
@@ -86,7 +85,6 @@ export function LoginScreen({ navigation }) {
       return;
     }
   };
-  console.log("ERRORS", errors);
   return (
     <View style={styles.container}>
       <Text style={{ marginBottom: 30 }}>This is the Login Screen</Text>
@@ -114,7 +112,7 @@ export function LoginScreen({ navigation }) {
         ></TextInput>
         <ErrorText name="password" errors={errors} />
       </View>
-      <TouchableOpacity style={styles.button} onPress={handleSubmit(doLogin)}>
+      <TouchableOpacity style={styles.button} onPress={handleSubmit(login)}>
         <Text style={styles.buttonTitle}>LOGIN</Text>
       </TouchableOpacity>
       <TouchableOpacity
