@@ -64,6 +64,7 @@ export function CreateAccountScreen({ navigation }) {
 
     const id = response.user?.id;
   };
+  
   return (
     <View style={styles.container}>
       <Text style={{ marginBottom: 30 }}>
