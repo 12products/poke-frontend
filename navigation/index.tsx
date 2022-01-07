@@ -16,8 +16,6 @@ import { useState, useEffect } from "react";
 import { ColorSchemeName, Pressable } from "react-native";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import { supabase } from "../supabase-service";
-import { RootStackParamList } from "../types";
-import LinkingConfiguration from "./LinkingConfiguration";
 
 export default function Navigation({
   colorScheme,
@@ -25,15 +23,14 @@ export default function Navigation({
   colorScheme: ColorSchemeName;
 }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setIsAuthenticated(!!supabase.auth.session());
     supabase.auth.onAuthStateChange((_event, session) => {
-      console.log("CURR SESSION:", session);
       setIsAuthenticated(!!session);
     });
   }, []);
+
   return (
     <NavigationContainer
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
