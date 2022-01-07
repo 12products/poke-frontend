@@ -59,6 +59,7 @@ export function CreateAccountScreen({ navigation }) {
         title: "Error creating new User",
         message: response?.error?.message,
       });
+      
       return;
     }
 
