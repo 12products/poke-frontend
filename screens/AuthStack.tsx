@@ -1,11 +1,15 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { CreateAccountScreen } from "./CreateAccountScreen";
 import { LoginScreen } from "./LoginScreen";
-export type FormInputs = {
+export type SignUpFormInputs = {
   email: string;
   password: string;
-  name?: string;
-  phone?: string;
+  name: string;
+  phone: string;
+};
+export type SignInFormInputs = {
+  email: string;
+  password: string;
 };
 
 const AuthStack = createNativeStackNavigator();

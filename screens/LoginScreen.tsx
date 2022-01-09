@@ -6,7 +6,7 @@ import { useCallback, useEffect } from "react";
 import { styles } from "./styles";
 import * as yup from "yup";
 import { supabase } from "../supabase-service";
-import { FormInputs } from "./AuthStack";
+import { SignInFormInputs } from "./AuthStack";
 import { ErrorAlert, ErrorText } from "./utils";
 
 const loginSchema = yup.object().shape({
@@ -26,7 +26,7 @@ export function LoginScreen({ navigation }) {
     control,
     reset,
     formState: { errors },
-  } = useForm<FormInputs>({
+  } = useForm<SignInFormInputs>({
     resolver: yupResolver(loginSchema),
     defaultValues: { email: "", password: "" },
   });
@@ -43,7 +43,7 @@ export function LoginScreen({ navigation }) {
     []
   );
 
-  const login = async (data: FormInputs) => {
+  const login = async (data: SignInFormInputs) => {
     const response = await supabase.auth.signIn(data);
     if (response.error) {
       ErrorAlert({

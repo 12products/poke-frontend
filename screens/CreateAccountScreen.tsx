@@ -17,7 +17,7 @@ const accountSchema = yup.object().shape({
     .email("Invalid Email Format")
     .required("Email is a required field"),
   password: yup.string().required("Password is a required field"),
-  finamerst: yup.string().required("Name is a required field"),
+  name: yup.string().required("Name is a required field"),
   phone: yup.string().matches(phoneRegex, "Invalid phone number!"),
 });
 
@@ -61,13 +61,13 @@ export function CreateAccountScreen({ navigation }) {
         title: "Error creating new User",
         message: response?.error?.message,
       });
-      
+
       return;
     }
 
     const id = response.user?.id;
   };
-  
+
   return (
     <View style={styles.container}>
       <Text style={{ marginBottom: 30 }}>
