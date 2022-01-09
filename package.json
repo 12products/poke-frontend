@@ -42,6 +42,7 @@
     "react-native-screens": "~3.10.1",
     "react-native-url-polyfill": "^1.3.0",
     "react-native-web": "0.17.1",
+    "twrnc": "^2.2.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
