@@ -31,6 +31,7 @@
     "expo-splash-screen": "~0.14.0",
     "expo-status-bar": "~1.2.0",
     "expo-web-browser": "~10.1.0",
+    "promise.allsettled": "^1.0.5",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-hook-form": "^7.22.5",
@@ -47,6 +48,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@types/promise.allsettled": "^1.0.3",
     "@types/react": "~17.0.21",
     "@types/react-native": "~0.64.12",
     "jest": "^26.6.3",
