@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react'
 import { ColorSchemeName } from 'react-native'
 
 import { AuthScreenStack } from '../screens/AuthStack'
-import { HomeScreenStack } from '../screens/HomeStack'
+import { HomeScreenStack } from '../screens/AppStack/AppStack'
 import { supabase } from '../supabase-service'
 
 export default function Navigation({
@@ -20,6 +20,7 @@ export default function Navigation({
 
   useEffect(() => {
     setIsAuthenticated(!!supabase.auth.session())
+
     supabase.auth.onAuthStateChange((_event, session) => {
       setIsAuthenticated(!!session)
     })

@@ -22,5 +22,6 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
 
 export type AuthStackParamList = {
   Login: undefined
-  CreateAccount: undefined
+  SignIn: undefined
+  VerifyAccount: { phone: string }
 }

@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/drawer'
 import { StatusBar } from 'expo-status-bar'
 
-import { supabase } from '../supabase-service'
+import { supabase } from '../../supabase-service'
 
 function HomeScreen() {
   return (
@@ -34,12 +34,13 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
           <DrawerItemList {...props} />
         </View>
       </DrawerContentScrollView>
+
       <View style={{ marginBottom: 30 }}>
         <Button
           title="LOGOUT"
           onPress={async () => {
-            props.navigation.closeDrawer()
             await supabase.auth.signOut()
+            props.navigation.closeDrawer()
           }}
         ></Button>
       </View>
