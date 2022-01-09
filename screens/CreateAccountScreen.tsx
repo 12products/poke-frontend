@@ -6,7 +6,7 @@ import { useCallback, useEffect } from "react";
 import { styles } from "./styles";
 import * as yup from "yup";
 import { supabase } from "../supabase-service";
-import { FormInputs } from "./AuthStack";
+import { SignUpFormInputs } from "./AuthStack";
 import { ErrorAlert, ErrorText } from "./utils";
 
 const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
@@ -32,7 +32,7 @@ export function CreateAccountScreen({ navigation }) {
     control,
     reset,
     formState: { errors },
-  } = useForm<FormInputs>({
+  } = useForm<SignUpFormInputs>({
     resolver: yupResolver(accountSchema),
     defaultValues: { email: "", password: "", name: "", phone: "" },
   });
@@ -51,7 +51,7 @@ export function CreateAccountScreen({ navigation }) {
     []
   );
 
-  const createAccount = async (data: FormInputs) => {
+  const createAccount = async (data: SignUpFormInputs) => {
     const { email, password } = data;
 
     // sign up user
