@@ -1,19 +1,20 @@
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View } from 'react-native'
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
   DrawerContentComponentProps,
-} from "@react-navigation/drawer";
-import { StatusBar } from "expo-status-bar";
-import { supabase } from "../supabase-service";
+} from '@react-navigation/drawer'
+import { StatusBar } from 'expo-status-bar'
+
+import { supabase } from '../supabase-service'
 
 function HomeScreen() {
   return (
     <View style={styles.container}>
       <Text> This is the HOME page</Text>
     </View>
-  );
+  )
 }
 
 function ProfileScreen() {
@@ -22,7 +23,7 @@ function ProfileScreen() {
       <Text> This is the PROFILE page</Text>
       <StatusBar style="auto" />
     </View>
-  );
+  )
 }
 
 function CustomDrawerContent(props: DrawerContentComponentProps) {
@@ -37,15 +38,17 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
         <Button
           title="LOGOUT"
           onPress={async () => {
-            props.navigation.closeDrawer();
-            await supabase.auth.signOut();
+            props.navigation.closeDrawer()
+            await supabase.auth.signOut()
           }}
         ></Button>
       </View>
     </>
-  );
+  )
 }
-const DrawerStack = createDrawerNavigator();
+
+const DrawerStack = createDrawerNavigator()
+
 export function HomeScreenStack() {
   return (
     <DrawerStack.Navigator
@@ -55,14 +58,14 @@ export function HomeScreenStack() {
       <DrawerStack.Screen name="Home" component={HomeScreen} />
       <DrawerStack.Screen name="Profile" component={ProfileScreen} />
     </DrawerStack.Navigator>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-});
+})
