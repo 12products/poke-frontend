@@ -4,8 +4,8 @@ import { LoginScreen } from "./LoginScreen";
 export type FormInputs = {
   email: string;
   password: string;
-  first?: string;
-  last?: string;
+  name?: string;
+  phone?: string;
 };
 
 const AuthStack = createNativeStackNavigator();

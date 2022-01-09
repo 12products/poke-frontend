@@ -9,17 +9,19 @@ import { supabase } from "../supabase-service";
 import { FormInputs } from "./AuthStack";
 import { ErrorAlert, ErrorText } from "./utils";
 
+const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+
 const accountSchema = yup.object().shape({
   email: yup
     .string()
     .email("Invalid Email Format")
     .required("Email is a required field"),
   password: yup.string().required("Password is a required field"),
-  first: yup.string().required("First name is a required field"),
-  last: yup.string().required("Last name is a required field"),
+  finamerst: yup.string().required("Name is a required field"),
+  phone: yup.string().matches(phoneRegex, "Invalid phone number!"),
 });
 
-type changeFieldInput = "email" | "first" | "last" | "password";
+type changeFieldInput = "email" | "name" | "phone" | "password";
 
 export function CreateAccountScreen({ navigation }) {
   const {
@@ -32,14 +34,14 @@ export function CreateAccountScreen({ navigation }) {
     formState: { errors },
   } = useForm<FormInputs>({
     resolver: yupResolver(accountSchema),
-    defaultValues: { email: "", password: "", first: "", last: "" },
+    defaultValues: { email: "", password: "", name: "", phone: "" },
   });
 
   useEffect(() => {
     register("email");
     register("password");
-    register("first");
-    register("last");
+    register("name");
+    register("phone");
   }, [register]);
 
   const onChangeField = useCallback(
@@ -74,22 +76,22 @@ export function CreateAccountScreen({ navigation }) {
       <StatusBar style="auto" />
 
       <View style={{ width: "80%" }}>
-        <Text style={styles.labelInput}>first name</Text>
+        <Text style={styles.labelInput}>name</Text>
         <TextInput
           style={styles.textInput}
           textContentType="name"
           autoCapitalize="none"
-          onChangeText={onChangeField("first")}
+          onChangeText={onChangeField("name")}
         ></TextInput>
-        <ErrorText name="first" errors={errors} />
+        <ErrorText name="name" errors={errors} />
       </View>
       <View style={{ width: "80%" }}>
-        <Text style={styles.labelInput}>last name</Text>
+        <Text style={styles.labelInput}>phone number</Text>
         <TextInput
-          textContentType="familyName"
+          textContentType="telephoneNumber"
           autoCapitalize="none"
           style={styles.textInput}
-          onChangeText={onChangeField("last")}
+          onChangeText={onChangeField("phone")}
         ></TextInput>
         <ErrorText name="last" errors={errors} />
       </View>
