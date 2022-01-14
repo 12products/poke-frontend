@@ -1,6 +1,4 @@
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import {
-  CompositeScreenProps,
   NavigatorScreenParams,
 } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -13,7 +11,6 @@ declare global {
 
 export type RootStackParamList = {
   Root: NavigatorScreenParams<AuthStackParamList> | undefined
-  Welcome: undefined
   NotFound: undefined
 }
 
@@ -24,4 +21,8 @@ export type AuthStackParamList = {
   Login: undefined
   SignIn: undefined
   VerifyAccount: { phone: string }
+}
+
+export type AppStackParamList = {
+  Reminders: undefined
 }

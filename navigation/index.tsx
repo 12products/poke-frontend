@@ -4,28 +4,39 @@ import {
   DarkTheme,
 } from '@react-navigation/native'
 import * as React from 'react'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { ColorSchemeName } from 'react-native'
+import shallow from 'zustand/shallow'
+import AsyncStorageLib from '@react-native-async-storage/async-storage'
 
 import { AuthScreenStack } from '../screens/AuthStack'
 import { HomeScreenStack } from '../screens/AppStack'
-import { supabase } from '../supabase-service'
+import { supabase } from '../lib/supabase'
+import { useStore } from '../store'
 
-export default function Navigation({
-  colorScheme,
-}: {
-  colorScheme: ColorSchemeName
-}) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
+  const [isAuthenticated, setSession] = useStore(
+    (state) => [state.isAuthenticated, state.setSession],
+    shallow
+  )
 
   useEffect(() => {
-    setIsAuthenticated(!!supabase.auth.session())
+    async function getAuthSession() {
+      console.log('eyyy', await AsyncStorageLib.getItem('supabase.auth.token'))
+      setSession(await supabase.auth.session())
 
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAuthenticated(!!session)
-    })
+      supabase.auth.onAuthStateChange(async (_event, session) => {
+        setSession(session)
+        console.log(
+          'heyyy',
+          await AsyncStorageLib.getItem('supabase.auth.token')
+        )
+      })
+    }
+
+    getAuthSession()
   }, [])
-
+  console.log(isAuthenticated)
   return (
     <NavigationContainer
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
@@ -34,3 +45,5 @@ export default function Navigation({
     </NavigationContainer>
   )
 }
+
+export default Navigation

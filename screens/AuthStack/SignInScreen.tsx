@@ -7,7 +7,7 @@ import * as yup from 'yup'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 import { styles } from '../styles'
-import { supabase } from '../../supabase-service'
+import { supabase } from '../../lib/supabase'
 import { ErrorAlert, ErrorText } from '../utils'
 import { AuthStackParamList } from '../../types'
 import tw from '../../lib/tailwind'
@@ -27,7 +27,7 @@ type SignInScreenNavigationProp = NativeStackScreenProps<
   'SignIn'
 >
 
-export function SignInScreen({ navigation }: SignInScreenNavigationProp) {
+function SignInScreen({ navigation }: SignInScreenNavigationProp) {
   const {
     register,
     setValue,
@@ -93,3 +93,5 @@ export function SignInScreen({ navigation }: SignInScreenNavigationProp) {
     </View>
   )
 }
+
+export default SignInScreen

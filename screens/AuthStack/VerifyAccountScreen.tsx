@@ -7,7 +7,7 @@ import * as yup from 'yup'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 import { styles } from '../styles'
-import { supabase } from '../../supabase-service'
+import { supabase } from '../../lib/supabase'
 import { ErrorAlert, ErrorText } from '../utils'
 import { AuthStackParamList } from '../../types'
 import tw from '../../lib/tailwind'
@@ -27,10 +27,7 @@ type VerifyAccountScreenNavigationProps = NativeStackScreenProps<
   'VerifyAccount'
 >
 
-export function VerifyAccountScreen({
-  route,
-  navigation,
-}: VerifyAccountScreenNavigationProps) {
+function VerifyAccountScreen({ route }: VerifyAccountScreenNavigationProps) {
   const {
     register,
     setValue,
@@ -94,3 +91,5 @@ export function VerifyAccountScreen({
     </View>
   )
 }
+
+export default VerifyAccountScreen
