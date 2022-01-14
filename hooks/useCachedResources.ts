@@ -3,8 +3,11 @@ import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect, useState } from 'react'
 
-export default function useCachedResources() {
+import { useStore } from '../store'
+
+function useCachedResources() {
   const [isLoadingComplete, setLoadingComplete] = useState(false)
+  const hasHydrated = useStore((state) => state.hasHydrated)
 
   // Load any resources or data that we need prior to rendering the app
   useEffect(() => {
@@ -29,5 +32,7 @@ export default function useCachedResources() {
     loadResourcesAndDataAsync()
   }, [])
 
-  return isLoadingComplete
+  return hasHydrated && isLoadingComplete
 }
+
+export default useCachedResources

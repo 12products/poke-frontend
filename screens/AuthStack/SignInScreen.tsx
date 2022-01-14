@@ -64,6 +64,8 @@ function SignInScreen({ navigation }: SignInScreenNavigationProp) {
       return
     }
 
+    await supabase.auth.refreshSession()
+
     navigation.navigate('VerifyAccount', { phone })
   }
 
