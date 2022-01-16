@@ -23,3 +23,13 @@ export const ErrorAlert = ({
   title: string
   message: string
 }) => Alert.alert(title, message, [{ text: 'OK' }])
+
+export const numToDays = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+]

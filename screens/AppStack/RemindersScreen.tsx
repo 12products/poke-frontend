@@ -13,6 +13,7 @@ import { useState, useEffect } from 'react'
 
 import { POKE_URL } from '@env'
 import { AppStackParamList } from '../../types'
+import { numToDays } from '../utils'
 
 type RemindersScreenNavigationProps = NativeStackScreenProps<
   AppStackParamList,
@@ -29,16 +30,6 @@ interface Reminder {
   createdAt: string
   updatedAt: string
 }
-
-const numToDays = [
-  'Sunday',
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-]
 
 const Item = ({ reminder }: { reminder: Reminder }) => {
   const { text, notificationTime, notificationDays, emoji } = reminder
