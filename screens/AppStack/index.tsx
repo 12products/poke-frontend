@@ -7,15 +7,8 @@ import {
 } from '@react-navigation/drawer'
 import { StatusBar } from 'expo-status-bar'
 
-import { supabase } from '../../supabase-service'
-
-function HomeScreen() {
-  return (
-    <View style={styles.container}>
-      <Text> This is the HOME page</Text>
-    </View>
-  )
-}
+import { supabase } from '../../lib/supabase'
+import RemindersScreen from './RemindersScreen'
 
 function ProfileScreen() {
   return (
@@ -53,10 +46,10 @@ const DrawerStack = createDrawerNavigator()
 export function HomeScreenStack() {
   return (
     <DrawerStack.Navigator
-      initialRouteName="Home"
+      initialRouteName="Reminders"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
-      <DrawerStack.Screen name="Home" component={HomeScreen} />
+      <DrawerStack.Screen name="Reminders" component={RemindersScreen} />
       <DrawerStack.Screen name="Profile" component={ProfileScreen} />
     </DrawerStack.Navigator>
   )
