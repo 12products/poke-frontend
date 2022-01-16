@@ -6,5 +6,4 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY, {
   localStorage: AsyncStorage,
   detectSessionInUrl: false,
 })
-
 export { supabase }
