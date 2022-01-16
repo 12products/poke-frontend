@@ -51,20 +51,19 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
   const [reminders, setReminders] = useState([])
   const [isLoading, setLoading] = useState(false)
 
-  const getReminders = async () => {
-    try {
-      setLoading(true)
-      const response = await fetch(`${POKE_URL}/reminders`)
-      const reminders = await response.json()
-      setReminders(reminders)
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
   useEffect(() => {
+    const getReminders = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch(`${POKE_URL}/reminders`)
+        const reminders = await response.json()
+        setReminders(reminders)
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setLoading(false)
+      }
+    }
     getReminders()
   }, [])
 
@@ -91,7 +90,10 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
         )}
       </View>
       <View style={styles.container}>
-        <Button title="Create a Poke" onPress={() => null}></Button>
+        <Button
+          title="Create a Poke"
+          onPress={() => navigation.navigate('CreateReminder')}
+        ></Button>
       </View>
     </>
   )
