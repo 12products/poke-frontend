@@ -9,6 +9,7 @@ import SectionedMultiSelect from 'react-native-sectioned-multi-select'
 import { POKE_URL } from '@env'
 import { AppStackParamList } from '../../types'
 import { styles } from '../styles'
+import { ErrorAlert, ErrorText } from '../utils'
 
 type CreateReminderScreenNavigationProps = NativeStackScreenProps<
   AppStackParamList,
@@ -31,6 +32,7 @@ const days = [
   { id: 5, name: 'Friday' },
   { id: 6, name: 'Saturday' },
 ]
+
 const createReminderSchema = yup.object().shape({
   text: yup.string(),
   notificationDays: yup.array().of(yup.number()),
@@ -65,15 +67,16 @@ function CreateReminderScreen({
 
   const createReminder = async (data: CreateReminderInput) => {
     try {
-      const response = await fetch(`${POKE_URL}/reminders`, {
+      await fetch(`${POKE_URL}/reminders`, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
           'Content-Type': 'application/json',
         },
       })
-    } catch (error) {
-      console.error(error)
+      navigation.navigate('Reminders')
+    } catch (error: any) {
+      ErrorAlert({ title: 'Error Creating Reminder', message: error?.message })
     }
   }
 
@@ -90,12 +93,14 @@ function CreateReminderScreen({
         onChangeText={onChangeField('text')}
         style={styles.textInput}
       ></TextInput>
+      <ErrorText name="text" errors={errors} />
 
       <Text style={styles.labelInput}>Notification Time</Text>
       <TextInput
         onChangeText={onChangeField('notificationTime')}
         style={styles.textInput}
       ></TextInput>
+      <ErrorText name="notificationTime" errors={errors} />
       <Text style={styles.labelInput}>Notification Days</Text>
       <SectionedMultiSelect
         IconRenderer={() => null}

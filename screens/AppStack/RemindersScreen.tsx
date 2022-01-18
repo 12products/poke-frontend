@@ -13,7 +13,7 @@ import { useState, useEffect } from 'react'
 
 import { POKE_URL } from '@env'
 import { AppStackParamList } from '../../types'
-import { numToDays } from '../utils'
+import { numToDays, ErrorAlert } from '../utils'
 
 type RemindersScreenNavigationProps = NativeStackScreenProps<
   AppStackParamList,
@@ -57,13 +57,18 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
         setLoading(true)
         const response = await fetch(`${POKE_URL}/reminders`)
         const reminders = await response.json()
+
         setReminders(reminders)
-      } catch (error) {
-        console.error(error)
+      } catch (error: any) {
+        ErrorAlert({
+          title: 'Error on Fetching Pokes',
+          message: error?.message,
+        })
       } finally {
         setLoading(false)
       }
     }
+
     getReminders()
   }, [])
 
