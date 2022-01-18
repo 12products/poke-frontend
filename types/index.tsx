@@ -1,6 +1,4 @@
-import {
-  NavigatorScreenParams,
-} from '@react-navigation/native'
+import { NavigatorScreenParams } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 declare global {
@@ -25,4 +23,5 @@ export type AuthStackParamList = {
 
 export type AppStackParamList = {
   Reminders: undefined
+  CreateReminder: undefined
 }
