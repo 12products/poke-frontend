@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react'
 import shallow from 'zustand/shallow'
 
-import { supabase } from '../lib/supabase'
 import { useStore } from '../store'
 
 function useAuth() {

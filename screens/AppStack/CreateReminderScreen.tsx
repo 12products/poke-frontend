@@ -10,6 +10,7 @@ import { POKE_URL } from '@env'
 import { AppStackParamList } from '../../types'
 import { styles } from '../styles'
 import { ErrorAlert, ErrorText } from '../utils'
+import useFetch from '../../hooks/useFetch'
 
 type CreateReminderScreenNavigationProps = NativeStackScreenProps<
   AppStackParamList,
@@ -51,13 +52,14 @@ function CreateReminderScreen({
     resolver: yupResolver(createReminderSchema),
     defaultValues: { text: '', notificationTime: '', notificationDays: [] },
   })
-
   const [selectedDays, setSelectedDays] = useState<number[]>([])
+  const { fetch } = useFetch()
 
   const onSelectedDayChange = (selectedDays: number[]) => {
     setSelectedDays(selectedDays)
     setValue('notificationDays', selectedDays)
   }
+
   const onChangeField = useCallback(
     (name: ChangeFieldInput) => (text: string) => {
       setValue(name, text)
@@ -74,6 +76,7 @@ function CreateReminderScreen({
           'Content-Type': 'application/json',
         },
       })
+
       navigation.navigate('Reminders')
     } catch (error: any) {
       ErrorAlert({ title: 'Error Creating Reminder', message: error?.message })

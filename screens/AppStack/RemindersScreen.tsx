@@ -14,6 +14,7 @@ import { useState, useEffect } from 'react'
 import { POKE_URL } from '@env'
 import { AppStackParamList } from '../../types'
 import { numToDays, ErrorAlert } from '../utils'
+import useFetch from '../../hooks/useFetch'
 
 type RemindersScreenNavigationProps = NativeStackScreenProps<
   AppStackParamList,
@@ -50,6 +51,7 @@ const Item = ({ reminder }: { reminder: Reminder }) => {
 function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
   const [reminders, setReminders] = useState([])
   const [isLoading, setLoading] = useState(false)
+  const { fetch } = useFetch()
 
   useEffect(() => {
     const getReminders = async () => {
