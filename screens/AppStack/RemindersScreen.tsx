@@ -9,7 +9,8 @@ import {
   ListRenderItemInfo,
 } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { useState, useEffect } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
+import { useState, useCallback } from 'react'
 
 import { POKE_URL } from '@env'
 import { AppStackParamList } from '../../types'
@@ -53,26 +54,33 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
   const [isLoading, setLoading] = useState(false)
   const { fetch } = useFetch()
 
-  useEffect(() => {
-    const getReminders = async () => {
-      try {
-        setLoading(true)
-        const response = await fetch(`${POKE_URL}/reminders`)
-        const reminders = await response.json()
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true
 
-        setReminders(reminders)
-      } catch (error: any) {
-        ErrorAlert({
-          title: 'Error on Fetching Pokes',
-          message: error?.message,
-        })
-      } finally {
-        setLoading(false)
+      const getReminders = async () => {
+        try {
+          setLoading(true)
+          const response = await fetch(`${POKE_URL}/reminders`)
+          const reminders = await response.json()
+          if (isActive) {
+            setReminders(reminders)
+          }
+        } catch (error: any) {
+          ErrorAlert({
+            title: 'Error on Fetching Pokes',
+            message: error?.message,
+          })
+        } finally {
+          setLoading(false)
+        }
       }
-    }
-
-    getReminders()
-  }, [])
+      getReminders()
+      return () => {
+        isActive = false
+      }
+    }, [])
+  )
 
   const renderReminder: ListRenderItem<Reminder> = (
     info: ListRenderItemInfo<Reminder>
