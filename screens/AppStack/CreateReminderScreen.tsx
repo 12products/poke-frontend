@@ -88,7 +88,8 @@ function CreateReminderScreen({
   const [selectedDays, setSelectedDays] = useState<number[]>([])
   const [selectedTime, setSelectedTime] = useState<Time[]>([])
   const { fetch } = useFetch()
-  const ref = useRef<SectionedMultiSelect<Day>>(null)
+  const refDay = useRef<SectionedMultiSelect<Day>>(null)
+  const refTime = useRef<SectionedMultiSelect<Time>>(null)
 
   const onSelectedDayChange = (selectedDays: number[]) => {
     setSelectedDays(selectedDays)
@@ -96,8 +97,13 @@ function CreateReminderScreen({
   }
 
   const onSelectedTimeChange = (selectedTime: Time[]) => {
-    console.log({ selectedTime })
     setSelectedTime(selectedTime)
+
+    if (!selectedTime.length) {
+      setValue('notificationTime', '')
+      return
+    }
+
     const [timePrefix, timeSuffix] = selectedTime[0].value.split(' ')
     const formatedTime =
       timeSuffix === 'pm' ? parseInt(timePrefix.split(':')[0]) + 12 : timePrefix
@@ -155,10 +161,30 @@ function CreateReminderScreen({
         selectedItems={selectedTime}
         showChips={false}
         hideSearch={true}
+        hideSelect={true}
+        ref={refTime}
       />
-      {!!selectedTime.length && (
-        <Text style={styles.textInput}>{selectedTime[0].value}</Text>
-      )}
+      <View style={styles.containerButton}>
+        {!!selectedTime.length ? (
+          <>
+            <Text style={styles.textInput}>{selectedTime[0].value}</Text>
+            <TouchableOpacity
+              onPress={() => refTime?.current?._removeAllItems()}
+              style={styles.button}
+            >
+              <Text style={styles.buttonTitle}>Remove</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <TouchableOpacity
+            onPress={() => refTime?.current?._toggleSelector()}
+            style={styles.button}
+          >
+            <Text style={styles.buttonTitle}>Select Time</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+
       <ErrorText name="notificationTime" errors={errors} />
 
       <Text style={styles.labelInput}>Notification Days</Text>
@@ -168,22 +194,33 @@ function CreateReminderScreen({
         uniqueKey="id"
         onSelectedItemsChange={onSelectedDayChange}
         selectedItems={selectedDays}
-        ref={ref}
+        ref={refDay}
         showCancelButton={true}
         hideSearch={true}
+        hideSelect={true}
+        showDropDowns={true}
       />
-      {!!selectedDays.length && (
+
+      <View style={styles.containerButton}>
         <TouchableOpacity
-          onPress={() => ref?.current?._removeAllItems()}
+          onPress={() => refDay?.current?._toggleSelector()}
           style={styles.button}
         >
-          <Text style={styles.buttonTitle}>Remove All</Text>
+          <Text style={styles.buttonTitle}>Select Days</Text>
         </TouchableOpacity>
-      )}
 
-      <TouchableOpacity onPress={handleSubmit(createReminder)}>
-        <Text>Confirm</Text>
-      </TouchableOpacity>
+        {!!selectedDays.length && (
+          <TouchableOpacity
+            onPress={() => refDay?.current?._removeAllItems()}
+            style={styles.button}
+          >
+            <Text style={styles.buttonTitle}>Remove All</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+      <View style={styles.container}>
+        <Button title={'Confirm'} onPress={handleSubmit(createReminder)} />
+      </View>
     </View>
   )
 }

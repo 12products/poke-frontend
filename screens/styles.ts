@@ -3,10 +3,16 @@ import { StyleSheet } from 'react-native'
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  containerButton: {
+    flex: 2,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+  },
+
   button: {
     backgroundColor: 'green',
     padding: 10,
@@ -14,6 +20,14 @@ export const styles = StyleSheet.create({
     borderRadius: 4,
     width: 200,
   },
+  confirmButton: {
+    backgroundColor: 'blue',
+    padding: 10,
+    margin: 10,
+    borderRadius: 4,
+    width: 200,
+  },
+
   buttonTitle: {
     textTransform: 'uppercase',
     fontWeight: 'bold',
