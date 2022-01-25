@@ -93,14 +93,20 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
           <ActivityIndicator />
         ) : (
           <>
-            {!!reminders.length && (
-              <Text style={styles.title}>Current Reminders</Text>
+            {!!reminders.length ? (
+              <>
+                <Text style={styles.title}>Current Pokes</Text>
+                <FlatList<Reminder>
+                  data={reminders}
+                  keyExtractor={({ id }) => id}
+                  renderItem={renderReminder}
+                />
+              </>
+            ) : (
+              <Text style={styles.title}>
+                No pokes yet! Create one below 👇
+              </Text>
             )}
-            <FlatList<Reminder>
-              data={reminders}
-              keyExtractor={({ id }) => id}
-              renderItem={renderReminder}
-            />
           </>
         )}
       </View>
