@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useCallback, useState, useEffect, useRef } from 'react'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select'
+import DateTimePicker from '@react-native-community/datetimepicker'
 
 import { POKE_URL } from '@env'
 import { AppStackParamList } from '../../types'
@@ -44,29 +45,6 @@ type Time = {
   value: string
 }
 
-const times: Time[] = [
-  { id: 0, value: '05:00 am' },
-  { id: 1, value: '06:00 am' },
-  { id: 2, value: '07:00 am' },
-  { id: 3, value: '08:00 am' },
-  { id: 4, value: '09:00 am' },
-  { id: 5, value: '10:00 am' },
-  { id: 6, value: '11:00 am' },
-  { id: 7, value: '12:00 pm' },
-  { id: 8, value: '01:00 pm' },
-  { id: 9, value: '02:00 pm' },
-  { id: 10, value: '03:00 pm' },
-  { id: 11, value: '04:00 pm' },
-  { id: 12, value: '05:00 pm' },
-  { id: 13, value: '06:00 pm' },
-  { id: 14, value: '07:00 pm' },
-  { id: 15, value: '08:00 pm' },
-  { id: 16, value: '09:00 pm' },
-  { id: 17, value: '10:00 pm' },
-  { id: 18, value: '11:00 pm' },
-  { id: 19, value: '12:00 am' },
-]
-
 const createReminderSchema = yup.object().shape({
   text: yup.string(),
   notificationDays: yup.array().of(yup.number()),
@@ -86,7 +64,8 @@ function CreateReminderScreen({
     defaultValues: { text: '', notificationTime: '', notificationDays: [] },
   })
   const [selectedDays, setSelectedDays] = useState<number[]>([])
-  const [selectedTime, setSelectedTime] = useState<Time[]>([])
+  const [isTimePickerVisible, setTimePickerVisible] = useState(false)
+  const [date, setDate] = useState(new Date())
   const { fetch } = useFetch()
   const refDay = useRef<SectionedMultiSelect<Day>>(null)
   const refTime = useRef<SectionedMultiSelect<Time>>(null)
@@ -95,21 +74,14 @@ function CreateReminderScreen({
     setSelectedDays(selectedDays)
     setValue('notificationDays', selectedDays)
   }
-
-  const onSelectedTimeChange = (selectedTime: Time[]) => {
-    setSelectedTime(selectedTime)
-
-    if (!selectedTime.length) {
-      setValue('notificationTime', '')
-      return
-    }
-
-    const [timePrefix, timeSuffix] = selectedTime[0].value.split(' ')
-    const formatedTime =
-      timeSuffix === 'pm' ? parseInt(timePrefix.split(':')[0]) + 12 : timePrefix
-    const dateTime = new Date(`01/01/2000 ${formatedTime}`)
-    setValue('notificationTime', dateTime.toISOString())
+  // @ts-ignore
+  const onSelectedTimeChange = (_, selectedTime: Date | undefined) => {
+    setValue('notificationTime', selectedTime?.toISOString() || '')
   }
+
+  const notificationTimeTitle = isTimePickerVisible
+    ? 'Confirm date'
+    : 'Show Time Picker'
 
   const onChangeField = useCallback(
     (name: ChangeFieldInput) => (text: string) => {
@@ -120,6 +92,7 @@ function CreateReminderScreen({
 
   const createReminder = async (data: CreateReminderInput) => {
     try {
+      console.log(POKE_URL)
       await fetch(`${POKE_URL}/reminders`, {
         method: 'POST',
         body: JSON.stringify(data),
@@ -150,41 +123,26 @@ function CreateReminderScreen({
       <ErrorText name="text" errors={errors} />
 
       <Text style={styles.labelInput}>Notification Time</Text>
-      <SectionedMultiSelect
-        IconRenderer={() => null}
-        displayKey="value"
-        items={times}
-        uniqueKey="id"
-        single={true}
-        onSelectedItemObjectsChange={onSelectedTimeChange}
-        onSelectedItemsChange={() => null}
-        selectedItems={selectedTime}
-        showChips={false}
-        hideSearch={true}
-        hideSelect={true}
-        ref={refTime}
-      />
-      <View style={styles.containerButton}>
-        {!!selectedTime.length ? (
-          <>
-            <Text style={styles.textInput}>{selectedTime[0].value}</Text>
-            <TouchableOpacity
-              onPress={() => refTime?.current?._removeAllItems()}
-              style={styles.button}
-            >
-              <Text style={styles.buttonTitle}>Remove</Text>
-            </TouchableOpacity>
-          </>
-        ) : (
-          <TouchableOpacity
-            onPress={() => refTime?.current?._toggleSelector()}
-            style={styles.button}
-          >
-            <Text style={styles.buttonTitle}>Select Time</Text>
-          </TouchableOpacity>
+
+      <View>
+        <Button
+          title={notificationTimeTitle}
+          onPress={() => setTimePickerVisible(!isTimePickerVisible)}
+        />
+      </View>
+      <View>
+        {isTimePickerVisible && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            mode={'time'}
+            display="spinner"
+            onChange={onSelectedTimeChange}
+            minuteInterval={5}
+            textColor="green"
+          />
         )}
       </View>
-
       <ErrorText name="notificationTime" errors={errors} />
 
       <Text style={styles.labelInput}>Notification Days</Text>
@@ -201,24 +159,19 @@ function CreateReminderScreen({
         showDropDowns={true}
       />
 
-      <View style={styles.containerButton}>
-        <TouchableOpacity
+      <View>
+        <Button
           onPress={() => refDay?.current?._toggleSelector()}
-          style={styles.button}
-        >
-          <Text style={styles.buttonTitle}>Select Days</Text>
-        </TouchableOpacity>
+          title="Select Days"
+        />
 
         {!!selectedDays.length && (
-          <TouchableOpacity
-            onPress={() => refDay?.current?._removeAllItems()}
-            style={styles.button}
-          >
-            <Text style={styles.buttonTitle}>Remove All</Text>
+          <TouchableOpacity onPress={() => refDay?.current?._removeAllItems()}>
+            <Text>Remove All</Text>
           </TouchableOpacity>
         )}
       </View>
-      <View style={styles.container}>
+      <View style={{ margin: 10 }}>
         <Button title={'Confirm'} onPress={handleSubmit(createReminder)} />
       </View>
     </View>

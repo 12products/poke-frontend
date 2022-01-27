@@ -15,11 +15,12 @@ export const styles = StyleSheet.create({
 
   button: {
     backgroundColor: 'green',
-    padding: 10,
+    padding: 20,
     margin: 10,
     borderRadius: 4,
-    width: 200,
+    width: 100,
   },
+
   confirmButton: {
     backgroundColor: 'blue',
     padding: 10,
@@ -34,6 +35,7 @@ export const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
   },
+
   textInput: {
     textTransform: 'uppercase',
     borderColor: 'black',
