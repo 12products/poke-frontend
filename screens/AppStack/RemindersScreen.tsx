@@ -93,7 +93,7 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
           <ActivityIndicator />
         ) : (
           <>
-            {reminders.length && (
+            {!!reminders.length && (
               <Text style={styles.title}>Current Reminders</Text>
             )}
             <FlatList<Reminder>

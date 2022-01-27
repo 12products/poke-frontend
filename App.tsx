@@ -5,7 +5,6 @@ import allSettled from 'promise.allsettled'
 import shallow from 'zustand/shallow'
 
 import useCachedResources from './hooks/useCachedResources'
-import useColorScheme from './hooks/useColorScheme'
 import Navigation from './navigation'
 import { supabase } from './lib/supabase'
 import { useStore } from './store'
@@ -16,7 +15,6 @@ allSettled.shim()
 
 export default function App() {
   const isLoadingComplete = useCachedResources()
-  const colorScheme = useColorScheme()
   const { session, setSession } = useStore(
     (state) => ({
       session: state.session,
@@ -48,7 +46,7 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} />
+        <Navigation />
         <StatusBar />
       </SafeAreaProvider>
     )

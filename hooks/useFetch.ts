@@ -7,7 +7,7 @@ function useFetch() {
 
   const pokeFetch = useCallback(
     (endpoint: RequestInfo, options?: RequestInit | undefined) => {
-      const headers = new Headers()
+      const headers = new Headers(options?.headers)
 
       if (isAuthenticated && session?.access_token) {
         headers.append('Authorization', `Bearer ${session.access_token}`)
