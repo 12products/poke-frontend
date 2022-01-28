@@ -8,30 +8,13 @@ import {
   ActivityIndicator,
   ListRenderItemInfo,
 } from 'react-native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useFocusEffect } from '@react-navigation/native'
 import { useState, useCallback } from 'react'
 
-import { AppStackParamList } from '../../types'
+import { RemindersScreenNavigationProps, Reminder } from '../../types'
 import { numToDays, ErrorAlert } from '../utils'
 import useFetch from '../../hooks/useFetch'
 import { POKE_URL } from '../../constants'
-
-type RemindersScreenNavigationProps = NativeStackScreenProps<
-  AppStackParamList,
-  'Reminders'
->
-
-interface Reminder {
-  id: string
-  text: string
-  notificationTime: string
-  notificationDays: Number[]
-  userId: string
-  emoji: string
-  createdAt: string
-  updatedAt: string
-}
 
 const Item = ({ reminder }: { reminder: Reminder }) => {
   const { text, notificationTime, notificationDays, emoji } = reminder

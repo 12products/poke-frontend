@@ -4,28 +4,20 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useCallback, useEffect } from 'react'
 import * as yup from 'yup'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 import { styles } from '../styles'
 import { supabase } from '../../lib/supabase'
 import { ErrorAlert, ErrorText } from '../utils'
-import { AuthStackParamList } from '../../types'
+import {
+  ChangeFieldVerifyInput,
+  VerifyAccountScreenNavigationProps,
+  SignUpFormVerifyInputs,
+} from '../../types'
 import tw from '../../lib/tailwind'
-
-export type SignUpFormInputs = {
-  token: string
-}
 
 const verifyOTPSchema = yup.object().shape({
   token: yup.string().required(),
 })
-
-type ChangeFieldInput = 'token'
-
-type VerifyAccountScreenNavigationProps = NativeStackScreenProps<
-  AuthStackParamList,
-  'VerifyAccount'
->
 
 function VerifyAccountScreen({ route }: VerifyAccountScreenNavigationProps) {
   const {
@@ -33,7 +25,7 @@ function VerifyAccountScreen({ route }: VerifyAccountScreenNavigationProps) {
     setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignUpFormInputs>({
+  } = useForm<SignUpFormVerifyInputs>({
     resolver: yupResolver(verifyOTPSchema),
     defaultValues: { token: '' },
   })
@@ -43,13 +35,13 @@ function VerifyAccountScreen({ route }: VerifyAccountScreenNavigationProps) {
   }, [register])
 
   const onChangeField = useCallback(
-    (name: ChangeFieldInput) => (value: string) => {
+    (name: ChangeFieldVerifyInput) => (value: string) => {
       setValue(name, value)
     },
     []
   )
 
-  const verifyOTP = async (data: SignUpFormInputs) => {
+  const verifyOTP = async (data: SignUpFormVerifyInputs) => {
     const { token } = data
     const { phone } = route.params
 

@@ -1,5 +1,4 @@
 import { View, Text, TextInput, TouchableOpacity, Button } from 'react-native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
@@ -7,28 +6,16 @@ import { useCallback, useState, useEffect, useRef } from 'react'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select'
 import DateTimePicker from '@react-native-community/datetimepicker'
 
-import { AppStackParamList } from '../../types'
+import {
+  Day,
+  CreateReminderScreenNavigationProps,
+  CreateReminderInput,
+  ChangeFieldInput,
+} from '../../types'
 import { styles } from '../styles'
 import { ErrorAlert, ErrorText } from '../utils'
 import useFetch from '../../hooks/useFetch'
 import { POKE_URL } from '../../constants'
-
-type CreateReminderScreenNavigationProps = NativeStackScreenProps<
-  AppStackParamList,
-  'CreateReminder'
->
-type ChangeFieldInput = 'text' | 'notificationDays' | 'notificationTime'
-
-type CreateReminderInput = {
-  text: string
-  notificationDays: number[]
-  notificationTime: string
-}
-
-type Day = {
-  id: Number
-  name: string
-}
 
 const days: Day[] = [
   { id: 0, name: 'Sunday' },
@@ -58,9 +45,9 @@ function CreateReminderScreen({
     resolver: yupResolver(createReminderSchema),
     defaultValues: { text: '', notificationTime: '', notificationDays: [] },
   })
+
   const [selectedDays, setSelectedDays] = useState<number[]>([])
   const [isTimePickerVisible, setTimePickerVisible] = useState(false)
-  const [date, setDate] = useState(new Date())
   const { fetch } = useFetch()
   const refDay = useRef<SectionedMultiSelect<Day>>(null)
 
@@ -72,10 +59,6 @@ function CreateReminderScreen({
   const onSelectedTimeChange = (_, selectedTime: Date | undefined) => {
     setValue('notificationTime', selectedTime?.toISOString() || '')
   }
-
-  const notificationTimeTitle = isTimePickerVisible
-    ? 'Confirm time'
-    : 'Show time picker'
 
   const onChangeField = useCallback(
     (name: ChangeFieldInput) => (text: string) => {
@@ -106,6 +89,10 @@ function CreateReminderScreen({
     register('text')
   }, [register])
 
+  const notificationTimeTitle = isTimePickerVisible
+    ? 'Confirm time'
+    : 'Show time picker'
+
   return (
     <View>
       <Text style={styles.labelInput}>Message</Text>
@@ -127,7 +114,7 @@ function CreateReminderScreen({
         {isTimePickerVisible && (
           <DateTimePicker
             testID="dateTimePicker"
-            value={date}
+            value={new Date()}
             mode={'time'}
             display="spinner"
             onChange={onSelectedTimeChange}
