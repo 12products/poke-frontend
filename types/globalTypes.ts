@@ -22,6 +22,7 @@ export type AuthStackParamList = {
 }
 
 export type AppStackParamList = {
+  Onboard: undefined
   Reminders: undefined
   CreateReminder: undefined
 }

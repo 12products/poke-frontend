@@ -8,6 +8,7 @@ import {
 import { StatusBar } from 'expo-status-bar'
 
 import { supabase } from '../../lib/supabase'
+import OnboardScreen from './OnboardScreen'
 import RemindersScreen from './RemindersScreen'
 import CreateReminderScreen from './CreateReminderScreen'
 
@@ -47,9 +48,10 @@ const DrawerStack = createDrawerNavigator()
 export function HomeScreenStack() {
   return (
     <DrawerStack.Navigator
-      initialRouteName="Reminders"
+      initialRouteName="Onboard"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
+      <DrawerStack.Screen name="Onboard" component={OnboardScreen} />
       <DrawerStack.Screen name="Reminders" component={RemindersScreen} />
       <DrawerStack.Screen
         name="CreateReminder"

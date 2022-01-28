@@ -1,8 +1,6 @@
 import { AuthStackParamList } from '.'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
-export type ChangeFieldAuthInput = 'phone'
-
 export type SignInScreenNavigationProp = NativeStackScreenProps<
   AuthStackParamList,
   'SignIn'

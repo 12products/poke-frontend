@@ -2,17 +2,13 @@ import { StatusBar } from 'expo-status-bar'
 import { View, Text, TextInput, TouchableOpacity } from 'react-native'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import * as yup from 'yup'
 
 import { styles } from '../styles'
 import { supabase } from '../../lib/supabase'
 import { ErrorAlert, ErrorText } from '../utils'
-import {
-  SignInScreenNavigationProp,
-  SignUpFormAuthInputs,
-  ChangeFieldAuthInput,
-} from '../../types'
+import { SignInScreenNavigationProp, SignUpFormAuthInputs } from '../../types'
 import tw from '../../lib/tailwind'
 
 const accountSchema = yup.object().shape({
@@ -34,14 +30,7 @@ function SignInScreen({ navigation }: SignInScreenNavigationProp) {
     register('phone')
   }, [register])
 
-  const onChangeField = useCallback(
-    (name: ChangeFieldAuthInput) => (text: string) => {
-      setValue(name, text)
-    },
-    []
-  )
-
-  const createAccount = async (data: SignUpFormAuthInputs) => {
+  const logIn = async (data: SignUpFormAuthInputs) => {
     const { phone } = data
 
     // Request a verification code to sign the user in
@@ -55,8 +44,6 @@ function SignInScreen({ navigation }: SignInScreenNavigationProp) {
 
       return
     }
-
-    await supabase.auth.refreshSession()
 
     navigation.navigate('VerifyAccount', { phone })
   }
@@ -72,15 +59,14 @@ function SignInScreen({ navigation }: SignInScreenNavigationProp) {
           textContentType="telephoneNumber"
           autoCapitalize="none"
           style={styles.textInput}
-          onChangeText={onChangeField('phone')}
+          onChangeText={(phone) => setValue('phone', phone)}
         ></TextInput>
-
         <ErrorText name="phone" errors={errors} />
       </View>
 
       <TouchableOpacity
         style={tw`bg-brand-blue w-full p-10`}
-        onPress={handleSubmit(createAccount)}
+        onPress={handleSubmit(logIn)}
       >
         <Text style={styles.buttonTitle}>Sign In</Text>
       </TouchableOpacity>
