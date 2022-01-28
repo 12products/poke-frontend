@@ -11,7 +11,6 @@ function useFetch() {
 
       if (isAuthenticated && session?.access_token) {
         headers.append('Authorization', `Bearer ${session.access_token}`)
-        refreshSession()
       }
 
       return fetch(endpoint, {

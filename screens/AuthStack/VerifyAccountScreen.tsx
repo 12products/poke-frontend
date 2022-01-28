@@ -14,6 +14,9 @@ import {
   SignUpFormVerifyInputs,
 } from '../../types'
 import tw from '../../lib/tailwind'
+import useAuth from '../../hooks/useAuth'
+import useFetch from '../../hooks/useFetch'
+import { POKE_URL } from '@env'
 
 const verifyOTPSchema = yup.object().shape({
   token: yup.string().required(),
@@ -29,6 +32,8 @@ function VerifyAccountScreen({ route }: VerifyAccountScreenNavigationProps) {
     resolver: yupResolver(verifyOTPSchema),
     defaultValues: { token: '' },
   })
+  const { session, isAuthenticated, setSession } = useAuth()
+  const { fetch } = useFetch()
 
   useEffect(() => {
     register('token')
@@ -46,7 +51,7 @@ function VerifyAccountScreen({ route }: VerifyAccountScreenNavigationProps) {
     const { phone } = route.params
 
     // Verify the OTP token from Twilio
-    const { error } = await supabase.auth.verifyOTP({ phone, token })
+    const { session, error } = await supabase.auth.verifyOTP({ phone, token })
 
     if (error) {
       ErrorAlert({
@@ -56,8 +61,6 @@ function VerifyAccountScreen({ route }: VerifyAccountScreenNavigationProps) {
 
       return
     }
-
-    // Ensure that a user exists so we can confirm the onboarding flow
   }
 
   return (

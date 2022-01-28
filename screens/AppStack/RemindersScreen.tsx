@@ -46,6 +46,7 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
           setLoading(true)
           const response = await fetch(`${POKE_URL}/reminders`)
           const reminders = await response.json()
+
           if (isActive) {
             setReminders(reminders)
           }
@@ -58,7 +59,9 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
           setLoading(false)
         }
       }
+
       getReminders()
+
       return () => {
         isActive = false
       }

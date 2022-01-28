@@ -8,6 +8,8 @@ export type AppState = {
   isAuthenticated: boolean
   setSession: (session: any) => void
   hasHydrated: boolean
+  hasOnboarded: boolean
+  setHasOnboarded: (hasOnboarded: boolean) => void
 }
 
 export const useStore = create<AppState>(
@@ -18,6 +20,8 @@ export const useStore = create<AppState>(
       setSession: (session: any) =>
         set({ session, isAuthenticated: !!session }),
       hasHydrated: false,
+      hasOnboarded: false,
+      setHasOnboarded: (hasOnboarded: boolean) => set({ hasOnboarded }),
     }),
     {
       name: 'PokeStore',

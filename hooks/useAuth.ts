@@ -4,11 +4,19 @@ import { useStore } from '../store'
 import { supabase } from '../lib/supabase'
 
 function useAuth() {
-  const { session, isAuthenticated, setSession } = useStore(
+  const {
+    session,
+    isAuthenticated,
+    setSession,
+    hasOnboarded,
+    setHasOnboarded,
+  } = useStore(
     (state) => ({
       session: state.session,
       isAuthenticated: state.isAuthenticated,
       setSession: state.setSession,
+      hasOnboarded: state.hasOnboarded,
+      setHasOnboarded: state.setHasOnboarded,
     }),
     shallow
   )
@@ -20,10 +28,18 @@ function useAuth() {
     await supabase.auth.setSession(session?.refresh_token)
 
     const { data } = await supabase.auth.refreshSession()
-    return data
+
+    setSession(data)
   }
 
-  return { session, isAuthenticated, setSession, refreshSession }
+  return {
+    session,
+    isAuthenticated,
+    setSession,
+    refreshSession,
+    hasOnboarded,
+    setHasOnboarded,
+  }
 }
 
 export default useAuth
