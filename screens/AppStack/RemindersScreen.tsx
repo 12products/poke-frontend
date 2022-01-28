@@ -12,10 +12,10 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useFocusEffect } from '@react-navigation/native'
 import { useState, useCallback } from 'react'
 
-import { POKE_URL } from '@env'
 import { AppStackParamList } from '../../types'
 import { numToDays, ErrorAlert } from '../utils'
 import useFetch from '../../hooks/useFetch'
+import { POKE_URL } from '../../constants'
 
 type RemindersScreenNavigationProps = NativeStackScreenProps<
   AppStackParamList,
@@ -61,7 +61,6 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
       const getReminders = async () => {
         try {
           setLoading(true)
-          console.log(POKE_URL)
           const response = await fetch(`${POKE_URL}/reminders`)
           const reminders = await response.json()
           if (isActive) {

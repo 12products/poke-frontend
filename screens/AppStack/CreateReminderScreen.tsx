@@ -7,11 +7,11 @@ import { useCallback, useState, useEffect, useRef } from 'react'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select'
 import DateTimePicker from '@react-native-community/datetimepicker'
 
-import { POKE_URL } from '@env'
 import { AppStackParamList } from '../../types'
 import { styles } from '../styles'
 import { ErrorAlert, ErrorText } from '../utils'
 import useFetch from '../../hooks/useFetch'
+import { POKE_URL } from '../../constants'
 
 type CreateReminderScreenNavigationProps = NativeStackScreenProps<
   AppStackParamList,
@@ -91,7 +91,6 @@ function CreateReminderScreen({
 
   const createReminder = async (data: CreateReminderInput) => {
     try {
-      console.log(POKE_URL)
       await fetch(`${POKE_URL}/reminders`, {
         method: 'POST',
         body: JSON.stringify(data),
