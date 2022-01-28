@@ -1,30 +1,23 @@
-import { View, Text, TextInput, TouchableOpacity } from 'react-native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { View, Text, TextInput, TouchableOpacity, Button } from 'react-native'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { useCallback, useState, useEffect } from 'react'
+import { useCallback, useState, useEffect, useRef } from 'react'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select'
+import DateTimePicker from '@react-native-community/datetimepicker'
 
-import { POKE_URL } from '@env'
-import { AppStackParamList } from '../../types'
+import {
+  Day,
+  CreateReminderScreenNavigationProps,
+  CreateReminderInput,
+  ChangeFieldInput,
+} from '../../types'
 import { styles } from '../styles'
 import { ErrorAlert, ErrorText } from '../utils'
 import useFetch from '../../hooks/useFetch'
+import { POKE_URL } from '../../constants'
 
-type CreateReminderScreenNavigationProps = NativeStackScreenProps<
-  AppStackParamList,
-  'CreateReminder'
->
-type ChangeFieldInput = 'text' | 'notificationDays' | 'notificationTime'
-
-type CreateReminderInput = {
-  text: string
-  notificationDays: number[]
-  notificationTime: string
-}
-
-const days = [
+const days: Day[] = [
   { id: 0, name: 'Sunday' },
   { id: 1, name: 'Monday' },
   { id: 2, name: 'Tuesday' },
@@ -52,12 +45,19 @@ function CreateReminderScreen({
     resolver: yupResolver(createReminderSchema),
     defaultValues: { text: '', notificationTime: '', notificationDays: [] },
   })
+
   const [selectedDays, setSelectedDays] = useState<number[]>([])
+  const [isTimePickerVisible, setTimePickerVisible] = useState(false)
   const { fetch } = useFetch()
+  const refDay = useRef<SectionedMultiSelect<Day>>(null)
 
   const onSelectedDayChange = (selectedDays: number[]) => {
     setSelectedDays(selectedDays)
     setValue('notificationDays', selectedDays)
+  }
+  // @ts-ignore
+  const onSelectedTimeChange = (_, selectedTime: Date | undefined) => {
+    setValue('notificationTime', selectedTime?.toISOString() || '')
   }
 
   const onChangeField = useCallback(
@@ -89,6 +89,10 @@ function CreateReminderScreen({
     register('text')
   }, [register])
 
+  const notificationTimeTitle = isTimePickerVisible
+    ? 'Confirm time'
+    : 'Show time picker'
+
   return (
     <View>
       <Text style={styles.labelInput}>Message</Text>
@@ -99,23 +103,57 @@ function CreateReminderScreen({
       <ErrorText name="text" errors={errors} />
 
       <Text style={styles.labelInput}>Notification Time</Text>
-      <TextInput
-        onChangeText={onChangeField('notificationTime')}
-        style={styles.textInput}
-      ></TextInput>
+
+      <View>
+        <Button
+          title={notificationTimeTitle}
+          onPress={() => setTimePickerVisible(!isTimePickerVisible)}
+        />
+      </View>
+      <View>
+        {isTimePickerVisible && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={new Date()}
+            mode={'time'}
+            display="spinner"
+            onChange={onSelectedTimeChange}
+            minuteInterval={5}
+            textColor="green"
+          />
+        )}
+      </View>
       <ErrorText name="notificationTime" errors={errors} />
+
       <Text style={styles.labelInput}>Notification Days</Text>
       <SectionedMultiSelect
         IconRenderer={() => null}
         items={days}
         uniqueKey="id"
-        showDropDowns={true}
         onSelectedItemsChange={onSelectedDayChange}
         selectedItems={selectedDays}
+        ref={refDay}
+        showCancelButton={true}
+        hideSearch={true}
+        hideSelect={true}
+        showDropDowns={true}
       />
-      <TouchableOpacity onPress={handleSubmit(createReminder)}>
-        <Text>Confirm</Text>
-      </TouchableOpacity>
+
+      <View>
+        <Button
+          onPress={() => refDay?.current?._toggleSelector()}
+          title="Select Days"
+        />
+
+        {!!selectedDays.length && (
+          <TouchableOpacity onPress={() => refDay?.current?._removeAllItems()}>
+            <Text>Remove All</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+      <View style={{ margin: 10 }}>
+        <Button title={'Confirm'} onPress={handleSubmit(createReminder)} />
+      </View>
     </View>
   )
 }

@@ -4,28 +4,20 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useCallback, useEffect } from 'react'
 import * as yup from 'yup'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 import { styles } from '../styles'
 import { supabase } from '../../lib/supabase'
 import { ErrorAlert, ErrorText } from '../utils'
-import { AuthStackParamList } from '../../types'
+import {
+  SignInScreenNavigationProp,
+  SignUpFormAuthInputs,
+  ChangeFieldAuthInput,
+} from '../../types'
 import tw from '../../lib/tailwind'
-
-export type SignUpFormInputs = {
-  phone: string
-}
 
 const accountSchema = yup.object().shape({
   phone: yup.string(),
 })
-
-type ChangeFieldInput = 'phone'
-
-type SignInScreenNavigationProp = NativeStackScreenProps<
-  AuthStackParamList,
-  'SignIn'
->
 
 function SignInScreen({ navigation }: SignInScreenNavigationProp) {
   const {
@@ -33,7 +25,7 @@ function SignInScreen({ navigation }: SignInScreenNavigationProp) {
     setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignUpFormInputs>({
+  } = useForm<SignUpFormAuthInputs>({
     resolver: yupResolver(accountSchema),
     defaultValues: { phone: '' },
   })
@@ -43,13 +35,13 @@ function SignInScreen({ navigation }: SignInScreenNavigationProp) {
   }, [register])
 
   const onChangeField = useCallback(
-    (name: ChangeFieldInput) => (text: string) => {
+    (name: ChangeFieldAuthInput) => (text: string) => {
       setValue(name, text)
     },
     []
   )
 
-  const createAccount = async (data: SignUpFormInputs) => {
+  const createAccount = async (data: SignUpFormAuthInputs) => {
     const { phone } = data
 
     // Request a verification code to sign the user in

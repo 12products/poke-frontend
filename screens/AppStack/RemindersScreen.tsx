@@ -8,30 +8,13 @@ import {
   ActivityIndicator,
   ListRenderItemInfo,
 } from 'react-native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useFocusEffect } from '@react-navigation/native'
 import { useState, useCallback } from 'react'
 
-import { POKE_URL } from '@env'
-import { AppStackParamList } from '../../types'
+import { RemindersScreenNavigationProps, Reminder } from '../../types'
 import { numToDays, ErrorAlert } from '../utils'
 import useFetch from '../../hooks/useFetch'
-
-type RemindersScreenNavigationProps = NativeStackScreenProps<
-  AppStackParamList,
-  'Reminders'
->
-
-interface Reminder {
-  id: string
-  text: string
-  notificationTime: string
-  notificationDays: Number[]
-  userId: string
-  emoji: string
-  createdAt: string
-  updatedAt: string
-}
+import { POKE_URL } from '../../constants'
 
 const Item = ({ reminder }: { reminder: Reminder }) => {
   const { text, notificationTime, notificationDays, emoji } = reminder
@@ -40,9 +23,9 @@ const Item = ({ reminder }: { reminder: Reminder }) => {
     <View style={styles.item}>
       <Text>
         {text} {emoji},{' '}
-        {`${reminderTime.getHours() % 12}:${reminderTime.getMinutes()} ${
-          reminderTime.getHours() > 12 ? 'pm' : 'am'
-        }`}{' '}
+        {`${reminderTime.getHours() % 12}:${
+          reminderTime.getMinutes() === 0 ? '00' : reminderTime.getMinutes()
+        }${reminderTime.getHours() > 12 ? 'pm' : 'am'}`}{' '}
         on {notificationDays.map((num) => `${numToDays[num as number]}, `)}{' '}
       </Text>
     </View>
@@ -93,14 +76,20 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
           <ActivityIndicator />
         ) : (
           <>
-            {!!reminders.length && (
-              <Text style={styles.title}>Current Reminders</Text>
+            {!!reminders.length ? (
+              <>
+                <Text style={styles.title}>Current Pokes</Text>
+                <FlatList<Reminder>
+                  data={reminders}
+                  keyExtractor={({ id }) => id}
+                  renderItem={renderReminder}
+                />
+              </>
+            ) : (
+              <Text style={styles.title}>
+                No pokes yet! Create one below 👇
+              </Text>
             )}
-            <FlatList<Reminder>
-              data={reminders}
-              keyExtractor={({ id }) => id}
-              renderItem={renderReminder}
-            />
           </>
         )}
       </View>
