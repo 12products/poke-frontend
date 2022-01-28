@@ -40,11 +40,6 @@ const days: Day[] = [
   { id: 6, name: 'Saturday' },
 ]
 
-type Time = {
-  id: Number
-  value: string
-}
-
 const createReminderSchema = yup.object().shape({
   text: yup.string(),
   notificationDays: yup.array().of(yup.number()),
@@ -79,8 +74,8 @@ function CreateReminderScreen({
   }
 
   const notificationTimeTitle = isTimePickerVisible
-    ? 'Confirm date'
-    : 'Show Time Picker'
+    ? 'Confirm time'
+    : 'Show time picker'
 
   const onChangeField = useCallback(
     (name: ChangeFieldInput) => (text: string) => {

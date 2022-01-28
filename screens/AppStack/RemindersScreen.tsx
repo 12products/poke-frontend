@@ -40,9 +40,9 @@ const Item = ({ reminder }: { reminder: Reminder }) => {
     <View style={styles.item}>
       <Text>
         {text} {emoji},{' '}
-        {`${reminderTime.getHours() % 12}:${reminderTime.getMinutes()} ${
-          reminderTime.getHours() > 12 ? 'pm' : 'am'
-        }`}{' '}
+        {`${reminderTime.getHours() % 12}:${
+          reminderTime.getMinutes() === 0 ? '00' : reminderTime.getMinutes()
+        }${reminderTime.getHours() > 12 ? 'pm' : 'am'}`}{' '}
         on {notificationDays.map((num) => `${numToDays[num as number]}, `)}{' '}
       </Text>
     </View>
