@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import allSettled from 'promise.allsettled'
 import shallow from 'zustand/shallow'
+import 'dotenv/config'
 
 import useCachedResources from './hooks/useCachedResources'
 import Navigation from './navigation'
@@ -14,6 +15,8 @@ import { useStore } from './store'
 allSettled.shim()
 
 export default function App() {
+  console.log(process.env)
+  require('dotenv').config()
   const isLoadingComplete = useCachedResources()
   const { session, setSession } = useStore(
     (state) => ({

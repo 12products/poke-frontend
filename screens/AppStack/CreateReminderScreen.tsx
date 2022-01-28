@@ -68,7 +68,6 @@ function CreateReminderScreen({
   const [date, setDate] = useState(new Date())
   const { fetch } = useFetch()
   const refDay = useRef<SectionedMultiSelect<Day>>(null)
-  const refTime = useRef<SectionedMultiSelect<Time>>(null)
 
   const onSelectedDayChange = (selectedDays: number[]) => {
     setSelectedDays(selectedDays)
