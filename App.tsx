@@ -7,6 +7,7 @@ import shallow from 'zustand/shallow'
 import Navigation from './navigation'
 import { supabase } from './lib/supabase'
 import { useStore } from './store'
+import useAuth from './hooks/useAuth'
 
 // Create a shim for Promise.allSettled because
 // it's not in React Native yet and Supabase uses it
@@ -15,13 +16,7 @@ allSettled.shim()
 export default function App() {
   const [isLoaded, setIsLoaded] = useState(false)
   const hasHydrated = useStore((state) => state.hasHydrated)
-  const { session, setSession } = useStore(
-    (state) => ({
-      session: state.session,
-      setSession: state.setSession,
-    }),
-    shallow
-  )
+  const { session, setSession, setHasOnboarded } = useAuth()
 
   useEffect(() => {
     async function getAuthSession() {
@@ -42,6 +37,7 @@ export default function App() {
 
       supabase.auth.onAuthStateChange(async (_event, session) => {
         setSession(session)
+        setHasOnboarded(session?.user?.user_metadata.onboarded || false)
       })
 
       setIsLoaded(true)

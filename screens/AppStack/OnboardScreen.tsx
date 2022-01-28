@@ -16,7 +16,6 @@ import { AppStackParamList } from '../../types'
 import useFetch from '../../hooks/useFetch'
 import useAuth from '../../hooks/useAuth'
 import { supabase } from '../../lib/supabase'
-import { useStore } from '../../store'
 import { ErrorText } from '../utils'
 import tw from '../../lib/tailwind'
 
@@ -77,6 +76,8 @@ function OnboardScreen({ navigation }: OnboardScreenNavigationProps) {
       })
 
       setHasOnboarded(true)
+      // Save the onboarding in Supabase's metadata
+      await supabase.auth.update({ data: { onboarded: true } })
 
       navigation.navigate('Reminders')
     } catch (error: any) {
