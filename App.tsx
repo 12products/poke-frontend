@@ -1,10 +1,9 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import allSettled from 'promise.allsettled'
 import shallow from 'zustand/shallow'
 
-import useCachedResources from './hooks/useCachedResources'
 import Navigation from './navigation'
 import { supabase } from './lib/supabase'
 import { useStore } from './store'
@@ -14,7 +13,8 @@ import { useStore } from './store'
 allSettled.shim()
 
 export default function App() {
-  const isLoadingComplete = useCachedResources()
+  const [isLoaded, setIsLoaded] = useState(false)
+  const hasHydrated = useStore((state) => state.hasHydrated)
   const { session, setSession } = useStore(
     (state) => ({
       session: state.session,
@@ -25,23 +25,36 @@ export default function App() {
 
   useEffect(() => {
     async function getAuthSession() {
+      // Try to refresh the user session
+      // and set to null we the session has expired
       if (session?.refresh_token) {
-        supabase.auth.setSession(session.refresh_token)
+        await supabase.auth.setAuth(session?.access_token)
+        const { session: freshSession, error } = await supabase.auth.setSession(
+          session?.refresh_token
+        )
+
+        if (error) {
+          setSession(null)
+        } else {
+          setSession(freshSession)
+        }
       }
 
       supabase.auth.onAuthStateChange(async (_event, session) => {
         setSession(session)
       })
+
+      setIsLoaded(true)
     }
 
     // Initialize the user session using the store
     // after we have hydrated it from storage
-    if (isLoadingComplete) {
+    if (hasHydrated) {
       getAuthSession()
     }
-  }, [isLoadingComplete])
+  }, [hasHydrated])
 
-  if (!isLoadingComplete) {
+  if (!isLoaded) {
     return null
   } else {
     return (

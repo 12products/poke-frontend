@@ -56,6 +56,8 @@ function VerifyAccountScreen({ route }: VerifyAccountScreenNavigationProps) {
 
       return
     }
+
+    // Ensure that a user exists so we can confirm the onboarding flow
   }
 
   return (
