@@ -1,16 +1,33 @@
 import { NavigationContainer } from '@react-navigation/native'
 import * as React from 'react'
 
-import { AuthScreenStack } from '../screens/AuthStack'
-import { HomeScreenStack } from '../screens/AppStack'
+import { AuthStack } from '../screens/AuthStack'
+import { AppStack } from '../screens/AppStack'
+import { OnboardStack } from '../screens/OnboardStack'
 import useAuth from '../hooks/useAuth'
 
 function Navigation() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, hasOnboarded } = useAuth()
+
+  if (!isAuthenticated) {
+    return (
+      <NavigationContainer>
+        <AuthStack />
+      </NavigationContainer>
+    )
+  }
+
+  if (isAuthenticated && !hasOnboarded) {
+    return (
+      <NavigationContainer>
+        <OnboardStack />
+      </NavigationContainer>
+    )
+  }
 
   return (
     <NavigationContainer>
-      {isAuthenticated ? <HomeScreenStack /> : <AuthScreenStack />}
+      <AppStack />
     </NavigationContainer>
   )
 }

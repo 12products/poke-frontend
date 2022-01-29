@@ -15,6 +15,7 @@ import { RemindersScreenNavigationProps, Reminder } from '../../types'
 import { numToDays, ErrorAlert } from '../utils'
 import useFetch from '../../hooks/useFetch'
 import { POKE_URL } from '../../constants'
+import { supabase } from '../../lib/supabase'
 
 const Item = ({ reminder }: { reminder: Reminder }) => {
   const { text, notificationTime, notificationDays, emoji } = reminder
@@ -96,7 +97,15 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
           </>
         )}
       </View>
+
       <View style={styles.container}>
+        <Button
+          title="LOGOUT"
+          onPress={async () => {
+            await supabase.auth.signOut()
+          }}
+        ></Button>
+
         <Button
           title="Create a Poke"
           onPress={() => navigation.navigate('CreateReminder')}

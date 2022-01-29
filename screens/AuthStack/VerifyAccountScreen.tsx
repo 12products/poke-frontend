@@ -23,12 +23,7 @@ function VerifyAccountScreen({
 }: VerifyAccountScreenNavigationProps) {
   const { brandBackground } = route.params
   const [errorCount, setErrorCount] = useState(0)
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SignUpFormVerifyInputs>({
+  const { register, setValue, handleSubmit } = useForm<SignUpFormVerifyInputs>({
     resolver: yupResolver(verifyOTPSchema),
     defaultValues: { token: '' },
   })
@@ -63,7 +58,7 @@ function VerifyAccountScreen({
   }
 
   return (
-    <View style={tw`bg-brand-${brandBackground} font-brand`}>
+    <View style={tw`bg-brand-${brandBackground}`}>
       <StatusBar style="auto" />
 
       <View style={tw`bg-brand-${brandBackground} h-full flex justify-center`}>
