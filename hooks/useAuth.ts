@@ -10,6 +10,8 @@ function useAuth() {
     setSession,
     hasOnboarded,
     setHasOnboarded,
+    user,
+    setUser,
   } = useStore(
     (state) => ({
       session: state.session,
@@ -17,6 +19,8 @@ function useAuth() {
       setSession: state.setSession,
       hasOnboarded: state.hasOnboarded,
       setHasOnboarded: state.setHasOnboarded,
+      user: state.user,
+      setUser: state.setUser,
     }),
     shallow
   )
@@ -39,6 +43,8 @@ function useAuth() {
     refreshSession,
     hasOnboarded,
     setHasOnboarded,
+    user,
+    setUser,
   }
 }
 

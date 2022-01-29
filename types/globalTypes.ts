@@ -20,6 +20,10 @@ export type AuthStackParamList = {
   VerifyAccount: { brandBackground: string; phone: string }
 }
 
+export type OnboardStackParamList = {
+  Onboard: { brandBackground: string }
+}
+
 export type AppStackParamList = {
   Onboard: undefined
   Reminders: undefined

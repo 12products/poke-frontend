@@ -15,7 +15,7 @@ export type CreateReminderInput = {
 }
 
 export type Day = {
-  id: Number
+  id: number
   name: string
 }
 
@@ -28,9 +28,10 @@ export interface Reminder {
   id: string
   text: string
   notificationTime: string
-  notificationDays: Number[]
+  notificationDays: number[]
   userId: string
   emoji: string
+  color: string
   createdAt: string
   updatedAt: string
 }

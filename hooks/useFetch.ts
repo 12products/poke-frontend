@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 import useAuth from '../hooks/useAuth'
 
 function useFetch() {
-  const { isAuthenticated, session, refreshSession } = useAuth()
+  const { isAuthenticated, session } = useAuth()
 
   const pokeFetch = useCallback(
     (endpoint: RequestInfo, options?: RequestInit | undefined) => {

@@ -1,7 +1,8 @@
+import { StatusBar } from 'expo-status-bar'
 import {
-  StyleSheet,
   Text,
   View,
+  ScrollView,
   TextInput,
   TouchableOpacity,
 } from 'react-native'
@@ -12,15 +13,14 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import { POKE_URL } from '../../constants'
-import { AppStackParamList } from '../../types'
+import { OnboardStackParamList } from '../../types'
 import useFetch from '../../hooks/useFetch'
 import useAuth from '../../hooks/useAuth'
-import { supabase } from '../../lib/supabase'
 import { ErrorText } from '../utils'
 import tw from '../../lib/tailwind'
 
 type OnboardScreenNavigationProps = NativeStackScreenProps<
-  AppStackParamList,
+  OnboardStackParamList,
   'Onboard'
 >
 
@@ -32,9 +32,11 @@ const onboardSchema = yup.object().shape({
   name: yup.string(),
 })
 
-function OnboardScreen({ navigation }: OnboardScreenNavigationProps) {
+function OnboardScreen({ route }: OnboardScreenNavigationProps) {
+  const { brandBackground } = route.params
   const { fetch } = useFetch()
-  const { session, hasOnboarded, setHasOnboarded } = useAuth()
+  const { user, setHasOnboarded } = useAuth()
+
   const {
     register,
     setValue,
@@ -49,25 +51,11 @@ function OnboardScreen({ navigation }: OnboardScreenNavigationProps) {
     register('name')
   }, [register])
 
-  useEffect(() => {
-    const onboardUser = async () => {
-      try {
-        await fetch(`${POKE_URL}/users/onboard`)
-      } catch (error: any) {
-        console.error('Failed to get or create user', error)
-      }
-    }
-
-    if (!hasOnboarded) {
-      onboardUser()
-    }
-  }, [])
-
   const updateUser = async (data: OnboardFormInputs) => {
     const { name } = data
 
     try {
-      await fetch(`${POKE_URL}/users/${session?.user?.id}`, {
+      await fetch(`${POKE_URL}/users/${user?.id}`, {
         method: 'PATCH',
         body: JSON.stringify({ name, onboarded: true }),
         headers: {
@@ -76,58 +64,43 @@ function OnboardScreen({ navigation }: OnboardScreenNavigationProps) {
       })
 
       setHasOnboarded(true)
-      // Save the onboarding in Supabase's metadata
-      await supabase.auth.update({ data: { onboarded: true } })
-
-      navigation.navigate('Reminders')
     } catch (error: any) {
       console.error('Failed to update user', error)
     }
   }
 
   return (
-    <View style={styles.container}>
-      <Text>Welcome to POKE. 👈</Text>
+    <ScrollView contentContainerStyle={tw`h-full bg-brand-${brandBackground}`}>
+      <StatusBar style="auto" />
 
-      <Text>What should we call you?</Text>
-      <TextInput onChangeText={(name) => setValue('name', name)}></TextInput>
-      <ErrorText name="text" errors={errors} />
+      <View style={tw`bg-brand-${brandBackground} h-full  flex justify-center`}>
+        <Text style={tw`text-6xl text-white font-bold uppercase text-right`}>
+          What's
+        </Text>
+        <Text style={tw`text-6xl text-white font-bold uppercase text-right`}>
+          your
+        </Text>
+        <Text style={tw`text-6xl text-white font-bold uppercase text-right`}>
+          name?
+        </Text>
 
-      <TouchableOpacity
-        style={tw`bg-brand-blue w-full p-10`}
-        onPress={handleSubmit(updateUser)}
-      >
-        <Text>Continue</Text>
-      </TouchableOpacity>
-    </View>
+        <TextInput
+          onChangeText={(name) => setValue('name', name)}
+          style={tw`text-3xl w-full bg-white p-4 my-4 text-right`}
+        ></TextInput>
+        <ErrorText name="text" errors={errors} />
+
+        <TouchableOpacity
+          style={tw`flex flex-row justify-end w-full`}
+          onPress={handleSubmit(updateUser)}
+        >
+          <Text style={tw`text-5xl text-white font-bold uppercase`}>
+            I'm Ready
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  item: {
-    backgroundColor: '#ebfafe',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
-  },
-  linkText: {
-    fontSize: 14,
-    color: '#2e78b7',
-  },
-})
 
 export default OnboardScreen

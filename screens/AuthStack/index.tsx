@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import SignInScreen from './SignInScreen'
 import VerifyAccountScreen from './VerifyAccountScreen'
-import { getRandomBrandColor } from '../utils'
+import { getRandomBrandColor } from '../../lib/utils'
 
 const Stack = createNativeStackNavigator()
 

@@ -1,33 +1,48 @@
 import {
-  StyleSheet,
   Text,
   View,
   Button,
-  FlatList,
-  ListRenderItem,
   ActivityIndicator,
-  ListRenderItemInfo,
+  TouchableOpacity,
+  ScrollView,
+  LayoutChangeEvent,
 } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
 import { useState, useCallback } from 'react'
 
 import { RemindersScreenNavigationProps, Reminder } from '../../types'
-import { numToDays, ErrorAlert } from '../utils'
+import { ErrorAlert } from '../utils'
+import { numToDays } from '../../lib/utils'
 import useFetch from '../../hooks/useFetch'
 import { POKE_URL } from '../../constants'
 import { supabase } from '../../lib/supabase'
+import tw from '../../lib/tailwind'
 
-const Item = ({ reminder }: { reminder: Reminder }) => {
-  const { text, notificationTime, notificationDays, emoji } = reminder
+const ReminderItem = ({
+  reminder: { text, notificationTime, notificationDays, emoji, color },
+}: {
+  reminder: Reminder
+}) => {
   const reminderTime = new Date(notificationTime)
   return (
-    <View style={styles.item}>
-      <Text>
-        {text} {emoji},{' '}
+    <View style={tw`bg-brand-${color} p-4`}>
+      <View style={tw`flex flex-row items-center`}>
+        <Text style={tw`text-5xl py-2 mr-2`}>{emoji}</Text>
+        <Text style={tw`text-2xl text-white font-bold uppercase`}>
+          {text.slice(0, 18)}
+          {text.length > 18 ? '...' : ''}
+        </Text>
+      </View>
+
+      <Text style={tw`uppercase font-bold text-white`}>
         {`${reminderTime.getHours() % 12}:${
           reminderTime.getMinutes() === 0 ? '00' : reminderTime.getMinutes()
         }${reminderTime.getHours() > 12 ? 'pm' : 'am'}`}{' '}
-        on {notificationDays.map((num) => `${numToDays[num as number]}, `)}{' '}
+        on{' '}
+        {notificationDays
+          .sort((dayA, dayB) => dayA - dayB)
+          .map((num) => numToDays[num].slice(0, 3))
+          .join(', ')}
       </Text>
     </View>
   )
@@ -36,6 +51,7 @@ const Item = ({ reminder }: { reminder: Reminder }) => {
 function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
   const [reminders, setReminders] = useState([])
   const [isLoading, setLoading] = useState(false)
+  const [buttonHeight, setButtonHeight] = useState(0)
   const { fetch } = useFetch()
 
   useFocusEffect(
@@ -69,77 +85,45 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
     }, [])
   )
 
-  const renderReminder: ListRenderItem<Reminder> = (
-    info: ListRenderItemInfo<Reminder>
-  ) => <Item reminder={info.item} />
+  const handleLayoutChange = (e: LayoutChangeEvent) => {
+    setButtonHeight(e.nativeEvent.layout.height)
+  }
 
   return (
-    <>
-      <View style={styles.container}>
+    <ScrollView onLayout={handleLayoutChange}>
+      <View
+        style={[
+          tw`h-full flex justify-center items-center`,
+          { height: buttonHeight },
+        ]}
+      >
+        <TouchableOpacity
+          style={tw`h-full w-full flex justify-center items-center bg-white`}
+          activeOpacity={1}
+          onPress={() => navigation.navigate('CreateReminder')}
+        >
+          <Text style={tw`text-9xl font-bold uppercase p-2`}>📣</Text>
+        </TouchableOpacity>
+      </View>
+
+      <Button
+        title="LOGOUT"
+        onPress={async () => {
+          await supabase.auth.signOut()
+        }}
+      ></Button>
+
+      <View style={tw`h-full`}>
         {isLoading ? (
           <ActivityIndicator />
         ) : (
-          <>
-            {!!reminders.length ? (
-              <>
-                <Text style={styles.title}>Current Pokes</Text>
-                <FlatList<Reminder>
-                  data={reminders}
-                  keyExtractor={({ id }) => id}
-                  renderItem={renderReminder}
-                />
-              </>
-            ) : (
-              <Text style={styles.title}>
-                No pokes yet! Create one below 👇
-              </Text>
-            )}
-          </>
+          reminders.map((reminder: Reminder) => (
+            <ReminderItem key={reminder.id} reminder={reminder} />
+          ))
         )}
       </View>
-
-      <View style={styles.container}>
-        <Button
-          title="LOGOUT"
-          onPress={async () => {
-            await supabase.auth.signOut()
-          }}
-        ></Button>
-
-        <Button
-          title="Create a Poke"
-          onPress={() => navigation.navigate('CreateReminder')}
-        ></Button>
-      </View>
-    </>
+    </ScrollView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  item: {
-    backgroundColor: '#ebfafe',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
-  },
-  linkText: {
-    fontSize: 14,
-    color: '#2e78b7',
-  },
-})
 
 export default ReminderScreen
