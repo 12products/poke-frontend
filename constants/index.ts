@@ -1,2 +1,2 @@
 export * from './secrets'
-export * from './colors'
+export * from './Colors'

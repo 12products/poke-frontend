@@ -24,4 +24,5 @@ export type AppStackParamList = {
   Onboard: undefined
   Reminders: undefined
   CreateReminder: undefined
+  Settings: undefined
 }

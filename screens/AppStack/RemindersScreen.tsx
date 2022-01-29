@@ -75,6 +75,12 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
 
   return (
     <>
+      <View>
+        <Button
+          title="Settings"
+          onPress={() => navigation.navigate('Settings')}
+        />
+      </View>
       <View style={styles.container}>
         {isLoading ? (
           <ActivityIndicator />
