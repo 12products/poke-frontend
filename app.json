@@ -7,6 +7,13 @@
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "plugins": [
+      "@stripe/stripe-react-native",
+      {
+        "merchantIdentifier": "",
+        "enableGooglePay": false
+      }
+    ],
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",

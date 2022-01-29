@@ -22,6 +22,7 @@
     "@react-navigation/drawer": "^6.1.8",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
+    "@stripe/stripe-react-native": "0.2.3",
     "@supabase/supabase-js": "^1.29.1",
     "@types/react-native-dotenv": "^0.2.0",
     "expo": "~44.0.0",

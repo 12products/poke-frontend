@@ -7,5 +7,6 @@ export default {
     pokeUrl: process.env.POKE_URL,
     supabasePublicKey: process.env.SUPABASE_PUBLIC_KEY,
     supabaseUrl: process.env.SUPABASE_URL,
+    stripePublicKey: process.env.STRIPE_PUBLIC_KEY,
   },
 }

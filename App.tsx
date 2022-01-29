@@ -2,15 +2,21 @@ import { useEffect, useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import allSettled from 'promise.allsettled'
+import { StripeProvider as _StripeProvider } from '@stripe/stripe-react-native'
+import type { Props as StripeProviderProps } from '@stripe/stripe-react-native/lib/typescript/src/components/StripeProvider'
 
 import Navigation from './navigation'
 import { supabase } from './lib/supabase'
 import { useStore } from './store'
 import useAuth from './hooks/useAuth'
+import { STRIPE_PUBLIC_KEY } from './constants'
 
 // Create a shim for Promise.allSettled because
 // it's not in React Native yet and Supabase uses it
 allSettled.shim()
+
+// Fixes TS issue due to typing of children
+const StripeProvider = _StripeProvider as React.FC<StripeProviderProps>
 
 export default function App() {
   const [hasLoadedAuth, setHasLoadedAuth] = useState(false)
@@ -53,10 +59,16 @@ export default function App() {
     return null
   } else {
     return (
-      <SafeAreaProvider>
-        <Navigation />
-        <StatusBar />
-      </SafeAreaProvider>
+      <StripeProvider
+        publishableKey={STRIPE_PUBLIC_KEY}
+        urlScheme=""
+        merchantIdentifier="merchant.com.{{YOUR_APP_NAME}}"
+      >
+        <SafeAreaProvider>
+          <Navigation />
+          <StatusBar />
+        </SafeAreaProvider>
+      </StripeProvider>
     )
   }
 }
