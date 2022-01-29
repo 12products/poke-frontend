@@ -10,10 +10,6 @@ module.exports = {
         'brand-blue': '#20B7E9',
         'brand-green': '#51F562',
       },
-      fontFamily: {
-        brand:
-          'Quicksand ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
-      },
     },
   },
 }

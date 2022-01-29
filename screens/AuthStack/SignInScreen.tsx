@@ -43,7 +43,7 @@ function SignInScreen({ navigation, route }: SignInScreenNavigationProp) {
   }
 
   return (
-    <View style={tw`bg-brand-${brandBackground} font-brand`}>
+    <View style={tw`bg-brand-${brandBackground}`}>
       <StatusBar style="auto" />
 
       <View style={tw`bg-brand-${brandBackground} h-full flex justify-center`}>

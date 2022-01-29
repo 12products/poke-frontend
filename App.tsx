@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import allSettled from 'promise.allsettled'
-import { useFonts, Quicksand_300Light } from '@expo-google-fonts/quicksand'
 
 import Navigation from './navigation'
 import { supabase } from './lib/supabase'
@@ -14,7 +13,6 @@ import useAuth from './hooks/useAuth'
 allSettled.shim()
 
 export default function App() {
-  const [hasLoadedFonts] = useFonts({ Quicksand_300Light })
   const [hasLoadedAuth, setHasLoadedAuth] = useState(false)
   const hasHydrated = useStore((state) => state.hasHydrated)
   const { session, setSession, setHasOnboarded } = useAuth()
@@ -51,7 +49,7 @@ export default function App() {
     }
   }, [hasHydrated])
 
-  if (!hasLoadedAuth || !hasLoadedFonts) {
+  if (!hasLoadedAuth) {
     return null
   } else {
     return (
