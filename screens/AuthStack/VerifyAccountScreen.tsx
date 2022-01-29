@@ -88,7 +88,7 @@ function VerifyAccountScreen({
 
         <TextInput
           textContentType="oneTimeCode"
-          style={tw`text-3xl w-full bg-white py-4 px-2 my-4`}
+          style={tw`text-3xl w-full bg-white p-4 my-4 text-right`}
           onChangeText={onChangeField('token')}
           autoFocus
         ></TextInput>

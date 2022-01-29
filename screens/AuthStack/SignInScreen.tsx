@@ -1,7 +1,6 @@
 import { StatusBar } from 'expo-status-bar'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { useRef, useState } from 'react'
-
 import PhoneInput from 'react-native-phone-number-input'
 
 import { supabase } from '../../lib/supabase'
@@ -80,7 +79,7 @@ function SignInScreen({ navigation, route }: SignInScreenNavigationProp) {
           autoFocus
           placeholder="(XXX) XXX-XXXX"
           containerStyle={tw`w-full bg-white my-4`}
-          textInputStyle={tw`text-3xl`}
+          textInputStyle={tw`text-3xl text-right`}
           codeTextStyle={tw`text-xl`}
         />
 
