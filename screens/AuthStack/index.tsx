@@ -4,18 +4,18 @@ import SignInScreen from './SignInScreen'
 import VerifyAccountScreen from './VerifyAccountScreen'
 import { getRandomBrandColor } from '../utils'
 
-const AuthStack = createNativeStackNavigator()
+const Stack = createNativeStackNavigator()
 
 const brandBackground = getRandomBrandColor()
 
-export function AuthScreenStack() {
+export function AuthStack() {
   return (
-    <AuthStack.Navigator
+    <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}
     >
-      <AuthStack.Screen
+      <Stack.Screen
         name="SignIn"
         component={SignInScreen}
         initialParams={{
@@ -23,13 +23,13 @@ export function AuthScreenStack() {
         }}
       />
 
-      <AuthStack.Screen
+      <Stack.Screen
         name="VerifyAccount"
         component={VerifyAccountScreen}
         initialParams={{
           brandBackground: brandBackground,
         }}
       />
-    </AuthStack.Navigator>
+    </Stack.Navigator>
   )
 }
