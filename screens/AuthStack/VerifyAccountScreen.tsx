@@ -2,27 +2,27 @@ import { StatusBar } from 'expo-status-bar'
 import { View, Text, TextInput, TouchableOpacity } from 'react-native'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import * as yup from 'yup'
 
-import { styles } from '../styles'
 import { supabase } from '../../lib/supabase'
-import { ErrorAlert, ErrorText } from '../utils'
 import {
   ChangeFieldVerifyInput,
   VerifyAccountScreenNavigationProps,
   SignUpFormVerifyInputs,
 } from '../../types'
 import tw from '../../lib/tailwind'
-import useAuth from '../../hooks/useAuth'
-import useFetch from '../../hooks/useFetch'
-import { POKE_URL } from '@env'
 
 const verifyOTPSchema = yup.object().shape({
   token: yup.string().required(),
 })
 
-function VerifyAccountScreen({ route }: VerifyAccountScreenNavigationProps) {
+function VerifyAccountScreen({
+  navigation,
+  route,
+}: VerifyAccountScreenNavigationProps) {
+  const { brandBackground } = route.params
+  const [errorCount, setErrorCount] = useState(0)
   const {
     register,
     setValue,
@@ -32,8 +32,6 @@ function VerifyAccountScreen({ route }: VerifyAccountScreenNavigationProps) {
     resolver: yupResolver(verifyOTPSchema),
     defaultValues: { token: '' },
   })
-  const { session, isAuthenticated, setSession } = useAuth()
-  const { fetch } = useFetch()
 
   useEffect(() => {
     register('token')
@@ -51,40 +49,75 @@ function VerifyAccountScreen({ route }: VerifyAccountScreenNavigationProps) {
     const { phone } = route.params
 
     // Verify the OTP token from Twilio
-    const { session, error } = await supabase.auth.verifyOTP({ phone, token })
+    const { error } = await supabase.auth.verifyOTP({ phone, token })
 
     if (error) {
-      ErrorAlert({
-        title: 'Error verifying phone number',
-        message: error?.message,
-      })
+      if (errorCount === 2) {
+        navigation.navigate('SignIn', {
+          brandBackground,
+        })
+      }
 
-      return
+      setErrorCount(errorCount + 1)
     }
   }
 
   return (
-    <View style={styles.container}>
+    <View style={tw`bg-brand-${brandBackground} font-brand`}>
       <StatusBar style="auto" />
 
-      <View style={{ width: '80%' }}>
-        <Text style={styles.labelInput}>phone number</Text>
+      <View style={tw`bg-brand-${brandBackground} h-full flex justify-center`}>
+        <Text style={tw`text-6xl text-white font-bold uppercase text-right`}>
+          Check
+        </Text>
+        <Text style={tw`text-6xl text-white font-bold uppercase text-right`}>
+          Your
+        </Text>
+        <Text style={tw`text-6xl text-white font-bold uppercase text-right`}>
+          Texts
+        </Text>
+        <Text style={tw`text-6xl text-white font-bold uppercase text-right`}>
+          Texts
+        </Text>
+        <Text style={tw`text-6xl text-white font-bold uppercase text-right`}>
+          Texts
+        </Text>
+        <Text style={tw`text-6xl text-white font-bold uppercase text-right`}>
+          Texts
+        </Text>
 
         <TextInput
           textContentType="oneTimeCode"
-          style={styles.textInput}
+          style={tw`text-3xl w-full bg-white p-4 my-4 text-right`}
           onChangeText={onChangeField('token')}
+          autoFocus
         ></TextInput>
 
-        <ErrorText name="token" errors={errors} />
-      </View>
+        {errorCount > 0 && (
+          <View style={tw`mb-4`}>
+            <Text
+              style={tw`text-2xl text-white font-bold uppercase text-right`}
+            >
+              Hmmm...
+            </Text>
+            <Text
+              style={tw`text-2xl text-white font-bold uppercase text-right`}
+            >
+              Something went wrong.
+            </Text>
+          </View>
+        )}
 
-      <TouchableOpacity
-        style={tw`bg-brand-blue`}
-        onPress={handleSubmit(verifyOTP)}
-      >
-        <Text style={styles.buttonTitle}>Verify Phone Number</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={handleSubmit(verifyOTP)}
+          style={tw`flex flex-row justify-end w-full`}
+        >
+          <Text style={tw`text-4xl`}>🔑 </Text>
+          <Text style={tw`text-5xl text-white font-bold uppercase`}>
+            Let Me In
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   )
 }

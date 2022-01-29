@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-import { POKE_URL } from '@env'
+import { POKE_URL } from '../../constants'
 import { AppStackParamList } from '../../types'
 import useFetch from '../../hooks/useFetch'
 import useAuth from '../../hooks/useAuth'

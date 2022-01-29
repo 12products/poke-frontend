@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import allSettled from 'promise.allsettled'
-import shallow from 'zustand/shallow'
 
 import Navigation from './navigation'
 import { supabase } from './lib/supabase'
@@ -14,7 +13,7 @@ import useAuth from './hooks/useAuth'
 allSettled.shim()
 
 export default function App() {
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [hasLoadedAuth, setHasLoadedAuth] = useState(false)
   const hasHydrated = useStore((state) => state.hasHydrated)
   const { session, setSession, setHasOnboarded } = useAuth()
 
@@ -40,7 +39,7 @@ export default function App() {
         setHasOnboarded(session?.user?.user_metadata.onboarded || false)
       })
 
-      setIsLoaded(true)
+      setHasLoadedAuth(true)
     }
 
     // Initialize the user session using the store
@@ -50,7 +49,7 @@ export default function App() {
     }
   }, [hasHydrated])
 
-  if (!isLoaded) {
+  if (!hasLoadedAuth) {
     return null
   } else {
     return (

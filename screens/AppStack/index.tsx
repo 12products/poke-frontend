@@ -50,6 +50,7 @@ export function HomeScreenStack() {
     <DrawerStack.Navigator
       initialRouteName="Onboard"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
+      screenOptions={{ headerTitle: () => <></> }}
     >
       <DrawerStack.Screen name="Onboard" component={OnboardScreen} />
       <DrawerStack.Screen name="Reminders" component={RemindersScreen} />
