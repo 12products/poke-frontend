@@ -14,6 +14,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@expo-google-fonts/quicksand": "^0.2.2",
     "@expo/vector-icons": "^12.0.0",
     "@hookform/resolvers": "^2.8.5",
     "@react-native-async-storage/async-storage": "~1.15.0",
@@ -39,6 +40,7 @@
     "react-native": "0.64.3",
     "react-native-dotenv": "^3.3.1",
     "react-native-gesture-handler": "~2.1.0",
+    "react-native-phone-number-input": "^2.1.0",
     "react-native-reanimated": "^2.3.1",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",

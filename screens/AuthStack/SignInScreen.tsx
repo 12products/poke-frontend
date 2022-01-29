@@ -1,40 +1,32 @@
 import { StatusBar } from 'expo-status-bar'
-import { View, Text, TextInput, TouchableOpacity } from 'react-native'
-import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useEffect } from 'react'
-import * as yup from 'yup'
+import { View, Text, TouchableOpacity } from 'react-native'
+import { useRef, useState } from 'react'
 
-import { styles } from '../styles'
+import PhoneInput from 'react-native-phone-number-input'
+
 import { supabase } from '../../lib/supabase'
-import { ErrorAlert, ErrorText } from '../utils'
+import { ErrorAlert } from '../utils'
 import { SignInScreenNavigationProp, SignUpFormAuthInputs } from '../../types'
 import tw from '../../lib/tailwind'
 
-const accountSchema = yup.object().shape({
-  phone: yup.string(),
-})
+function SignInScreen({ navigation, route }: SignInScreenNavigationProp) {
+  const { brandBackground } = route.params
+  const phoneInput = useRef<PhoneInput>(null)
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [formattedPhoneNumber, setFormattedPhoneNumber] = useState('')
+  const [validPhoneNumber, setValidPhoneNumber] = useState(true)
 
-function SignInScreen({ navigation }: SignInScreenNavigationProp) {
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SignUpFormAuthInputs>({
-    resolver: yupResolver(accountSchema),
-    defaultValues: { phone: '' },
-  })
-
-  useEffect(() => {
-    register('phone')
-  }, [register])
-
-  const logIn = async (data: SignUpFormAuthInputs) => {
-    const { phone } = data
+  const logIn = async () => {
+    const isValidPhoneNumber = phoneInput.current?.isValidNumber(phoneNumber)
+    if (!isValidPhoneNumber) {
+      setValidPhoneNumber(false)
+      return
+    }
 
     // Request a verification code to sign the user in
-    const { error } = await supabase.auth.signIn({ phone })
+    const { error } = await supabase.auth.signIn({
+      phone: formattedPhoneNumber,
+    })
 
     if (error) {
       ErrorAlert({
@@ -45,31 +37,74 @@ function SignInScreen({ navigation }: SignInScreenNavigationProp) {
       return
     }
 
-    navigation.navigate('VerifyAccount', { phone })
+    navigation.navigate('VerifyAccount', {
+      brandBackground,
+      phone: formattedPhoneNumber,
+    })
   }
 
   return (
-    <View style={styles.container}>
+    <View style={tw`bg-brand-${brandBackground} font-brand`}>
       <StatusBar style="auto" />
 
-      <View style={{ width: '80%' }}>
-        <Text style={styles.labelInput}>phone number</Text>
+      <View style={tw`bg-brand-${brandBackground} h-full flex justify-center`}>
+        <Text style={tw`text-6xl text-white font-bold uppercase text-right`}>
+          Enter
+        </Text>
+        <Text style={tw`text-6xl text-white font-bold uppercase text-right`}>
+          Your
+        </Text>
+        <Text style={tw`text-6xl text-white font-bold uppercase text-right`}>
+          Digits
+        </Text>
+        <Text style={tw`text-6xl text-white font-bold uppercase text-right`}>
+          Digits
+        </Text>
+        <Text style={tw`text-6xl text-white font-bold uppercase text-right`}>
+          Digits
+        </Text>
+        <Text style={tw`text-6xl text-white font-bold uppercase text-right`}>
+          Digits
+        </Text>
 
-        <TextInput
-          textContentType="telephoneNumber"
-          autoCapitalize="none"
-          style={styles.textInput}
-          onChangeText={(phone) => setValue('phone', phone)}
-        ></TextInput>
-        <ErrorText name="phone" errors={errors} />
+        <PhoneInput
+          ref={phoneInput}
+          defaultCode="US"
+          layout="first"
+          onChangeText={(phone) => {
+            setPhoneNumber(phone)
+          }}
+          onChangeFormattedText={(text) => {
+            setFormattedPhoneNumber(text)
+          }}
+          autoFocus
+          placeholder="(XXX) XXX-XXXX"
+          containerStyle={tw`w-full bg-white my-4`}
+          textInputStyle={tw`text-3xl`}
+          codeTextStyle={tw`text-xl`}
+        />
+
+        {!validPhoneNumber && (
+          <View style={tw`mb-4`}>
+            <Text
+              style={tw`text-3xl text-white font-bold uppercase text-right`}
+            >
+              No funny business.
+            </Text>
+            <Text
+              style={tw`text-2xl text-white font-bold uppercase text-right`}
+            >
+              Give us your actual digits.
+            </Text>
+          </View>
+        )}
+
+        <TouchableOpacity style={tw`text-6xl w-full`} onPress={logIn}>
+          <Text style={tw`text-5xl text-white font-bold uppercase text-right`}>
+            👉 Onward
+          </Text>
+        </TouchableOpacity>
       </View>
-
-      <TouchableOpacity
-        style={tw`bg-brand-blue w-full p-10`}
-        onPress={handleSubmit(logIn)}
-      >
-        <Text style={styles.buttonTitle}>Sign In</Text>
-      </TouchableOpacity>
     </View>
   )
 }

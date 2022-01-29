@@ -16,9 +16,8 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, Screen>
 
 export type AuthStackParamList = {
-  Login: undefined
-  SignIn: undefined
-  VerifyAccount: { phone: string }
+  SignIn: { brandBackground: string }
+  VerifyAccount: { brandBackground: string; phone: string }
 }
 
 export type AppStackParamList = {

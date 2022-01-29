@@ -1,5 +1,7 @@
 import { View, Text, Alert } from 'react-native'
 
+import { BRAND_COLORS } from '../constants'
+
 export const ErrorText = ({
   name,
   errors,
@@ -33,3 +35,6 @@ export const numToDays = [
   'Friday',
   'Saturday',
 ]
+
+export const getRandomBrandColor = () =>
+  BRAND_COLORS[Math.floor(Math.random() * BRAND_COLORS.length)]
