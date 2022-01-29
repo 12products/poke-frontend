@@ -99,9 +99,13 @@ function SignInScreen({ navigation, route }: SignInScreenNavigationProp) {
           </View>
         )}
 
-        <TouchableOpacity style={tw`text-6xl w-full`} onPress={logIn}>
-          <Text style={tw`text-5xl text-white font-bold uppercase text-right`}>
-            👉 Onward
+        <TouchableOpacity
+          style={tw`flex flex-row justify-end w-full`}
+          onPress={logIn}
+        >
+          <Text style={tw`text-4xl`}>👉</Text>
+          <Text style={tw`text-5xl text-white font-bold uppercase`}>
+            Onward
           </Text>
         </TouchableOpacity>
       </View>

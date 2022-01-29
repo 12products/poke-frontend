@@ -74,7 +74,16 @@ function VerifyAccountScreen({
           Your
         </Text>
         <Text style={tw`text-6xl text-white font-bold uppercase text-right`}>
-          Messages
+          Texts
+        </Text>
+        <Text style={tw`text-6xl text-white font-bold uppercase text-right`}>
+          Texts
+        </Text>
+        <Text style={tw`text-6xl text-white font-bold uppercase text-right`}>
+          Texts
+        </Text>
+        <Text style={tw`text-6xl text-white font-bold uppercase text-right`}>
+          Texts
         </Text>
 
         <TextInput
@@ -99,8 +108,12 @@ function VerifyAccountScreen({
           </View>
         )}
 
-        <TouchableOpacity onPress={handleSubmit(verifyOTP)}>
-          <Text style={tw`text-5xl text-white font-bold uppercase text-right`}>
+        <TouchableOpacity
+          onPress={handleSubmit(verifyOTP)}
+          style={tw`flex flex-row justify-end w-full`}
+        >
+          <Text style={tw`text-4xl`}>🔑 </Text>
+          <Text style={tw`text-5xl text-white font-bold uppercase`}>
             Let Me In
           </Text>
         </TouchableOpacity>
