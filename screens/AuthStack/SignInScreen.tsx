@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, ScrollView, Text, TouchableOpacity } from 'react-native'
 import { useRef, useState } from 'react'
 import PhoneInput from 'react-native-phone-number-input'
 
@@ -43,7 +43,7 @@ function SignInScreen({ navigation, route }: SignInScreenNavigationProp) {
   }
 
   return (
-    <View style={tw`bg-brand-${brandBackground}`}>
+    <ScrollView contentContainerStyle={tw`h-full bg-brand-${brandBackground}`}>
       <StatusBar style="auto" />
 
       <View style={tw`bg-brand-${brandBackground} h-full flex justify-center`}>
@@ -76,7 +76,6 @@ function SignInScreen({ navigation, route }: SignInScreenNavigationProp) {
           onChangeFormattedText={(text) => {
             setFormattedPhoneNumber(text)
           }}
-          autoFocus
           placeholder="(XXX) XXX-XXXX"
           containerStyle={tw`w-full bg-white my-4`}
           textInputStyle={tw`text-3xl text-right`}
@@ -108,7 +107,7 @@ function SignInScreen({ navigation, route }: SignInScreenNavigationProp) {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 

@@ -1,5 +1,11 @@
 import { StatusBar } from 'expo-status-bar'
-import { View, Text, TextInput, TouchableOpacity } from 'react-native'
+import {
+  View,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useCallback, useEffect, useState } from 'react'
@@ -58,7 +64,7 @@ function VerifyAccountScreen({
   }
 
   return (
-    <View style={tw`bg-brand-${brandBackground}`}>
+    <ScrollView contentContainerStyle={tw`h-full bg-brand-${brandBackground}`}>
       <StatusBar style="auto" />
 
       <View style={tw`bg-brand-${brandBackground} h-full flex justify-center`}>
@@ -85,7 +91,6 @@ function VerifyAccountScreen({
           textContentType="oneTimeCode"
           style={tw`text-3xl w-full bg-white p-4 my-4 text-right`}
           onChangeText={onChangeField('token')}
-          autoFocus
         ></TextInput>
 
         {errorCount > 0 && (
@@ -113,7 +118,7 @@ function VerifyAccountScreen({
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 

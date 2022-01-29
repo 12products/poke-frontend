@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import OnboardScreen from './OnboardScreen'
-import { getRandomBrandColor } from '../utils'
+import { getRandomBrandColor } from '../../lib/utils'
 
 const Stack = createNativeStackNavigator()
 

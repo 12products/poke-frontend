@@ -1,5 +1,11 @@
 import { StatusBar } from 'expo-status-bar'
-import { Text, View, TextInput, TouchableOpacity } from 'react-native'
+import {
+  Text,
+  View,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -26,7 +32,7 @@ const onboardSchema = yup.object().shape({
   name: yup.string(),
 })
 
-function OnboardScreen({ navigation, route }: OnboardScreenNavigationProps) {
+function OnboardScreen({ route }: OnboardScreenNavigationProps) {
   const { brandBackground } = route.params
   const { fetch } = useFetch()
   const { user, setHasOnboarded } = useAuth()
@@ -64,7 +70,7 @@ function OnboardScreen({ navigation, route }: OnboardScreenNavigationProps) {
   }
 
   return (
-    <View style={tw`bg-brand-${brandBackground}`}>
+    <ScrollView contentContainerStyle={tw`h-full bg-brand-${brandBackground}`}>
       <StatusBar style="auto" />
 
       <View style={tw`bg-brand-${brandBackground} h-full  flex justify-center`}>
@@ -93,7 +99,7 @@ function OnboardScreen({ navigation, route }: OnboardScreenNavigationProps) {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 

@@ -1,9 +1,15 @@
-import { View, Text, TextInput, TouchableOpacity, Button } from 'react-native'
+import {
+  View,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Switch,
+} from 'react-native'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useCallback, useState, useEffect, useRef } from 'react'
-import SectionedMultiSelect from 'react-native-sectioned-multi-select'
 import DateTimePicker from '@react-native-community/datetimepicker'
 
 import {
@@ -12,10 +18,11 @@ import {
   CreateReminderInput,
   ChangeFieldInput,
 } from '../../types'
-import { styles } from '../styles'
-import { ErrorAlert, ErrorText } from '../utils'
+import { ErrorAlert } from '../utils'
+import { getRandomBrandColor } from '../../lib/utils'
 import useFetch from '../../hooks/useFetch'
 import { POKE_URL } from '../../constants'
+import tw from '../../lib/tailwind'
 
 const days: Day[] = [
   { id: 0, name: 'Sunday' },
@@ -28,14 +35,18 @@ const days: Day[] = [
 ]
 
 const createReminderSchema = yup.object().shape({
-  text: yup.string(),
+  text: yup.string().required(),
   notificationDays: yup.array().of(yup.number()),
   notificationTime: yup.string(),
 })
 
+const reminderColor = getRandomBrandColor()
+
 function CreateReminderScreen({
   navigation,
 }: CreateReminderScreenNavigationProps) {
+  const defaultNotificationTime = new Date()
+
   const {
     register,
     setValue,
@@ -43,18 +54,16 @@ function CreateReminderScreen({
     formState: { errors },
   } = useForm<CreateReminderInput>({
     resolver: yupResolver(createReminderSchema),
-    defaultValues: { text: '', notificationTime: '', notificationDays: [] },
+    defaultValues: {
+      text: '',
+      notificationTime: defaultNotificationTime.toISOString(),
+      notificationDays: [],
+    },
   })
 
   const [selectedDays, setSelectedDays] = useState<number[]>([])
-  const [isTimePickerVisible, setTimePickerVisible] = useState(false)
   const { fetch } = useFetch()
-  const refDay = useRef<SectionedMultiSelect<Day>>(null)
 
-  const onSelectedDayChange = (selectedDays: number[]) => {
-    setSelectedDays(selectedDays)
-    setValue('notificationDays', selectedDays)
-  }
   // @ts-ignore
   const onSelectedTimeChange = (_, selectedTime: Date | undefined) => {
     setValue('notificationTime', selectedTime?.toISOString() || '')
@@ -71,7 +80,7 @@ function CreateReminderScreen({
     try {
       await fetch(`${POKE_URL}/reminders`, {
         method: 'POST',
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, color: reminderColor }),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -89,72 +98,83 @@ function CreateReminderScreen({
     register('text')
   }, [register])
 
-  const notificationTimeTitle = isTimePickerVisible
-    ? 'Confirm time'
-    : 'Show time picker'
+  const toggleSelectedDay = (day: number, isSelected: boolean) => {
+    let newSelectedDays = [...selectedDays]
+
+    if (isSelected) {
+      newSelectedDays = newSelectedDays.filter(
+        (selectedDay) => selectedDay !== day
+      )
+    } else {
+      newSelectedDays.push(day)
+    }
+
+    setSelectedDays(newSelectedDays)
+    setValue('notificationDays', newSelectedDays)
+  }
 
   return (
-    <View>
-      <Text style={styles.labelInput}>Message</Text>
-      <TextInput
-        onChangeText={onChangeField('text')}
-        style={styles.textInput}
-      ></TextInput>
-      <ErrorText name="text" errors={errors} />
-
-      <Text style={styles.labelInput}>Notification Time</Text>
-
-      <View>
-        <Button
-          title={notificationTimeTitle}
-          onPress={() => setTimePickerVisible(!isTimePickerVisible)}
-        />
+    <ScrollView
+      contentContainerStyle={tw`bg-brand-${reminderColor} pt-10 pb-10`}
+    >
+      <Text
+        style={tw`text-6xl text-white font-bold uppercase text-center w-full px-4 mt-8 mb-4`}
+      >
+        What?
+      </Text>
+      <View style={tw`bg-white min-h-12`}>
+        <TextInput
+          onChangeText={onChangeField('text')}
+          style={tw`text-4xl w-full bg-white p-4 my-4 text-center`}
+          multiline
+        ></TextInput>
       </View>
-      <View>
-        {isTimePickerVisible && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={new Date()}
-            mode={'time'}
-            display="spinner"
-            onChange={onSelectedTimeChange}
-            minuteInterval={5}
-            textColor="green"
-          />
-        )}
-      </View>
-      <ErrorText name="notificationTime" errors={errors} />
+      {errors?.text && (
+        <Text style={tw`text-2xl text-white font-bold uppercase text-center`}>
+          ☝️ we totally need this.
+        </Text>
+      )}
 
-      <Text style={styles.labelInput}>Notification Days</Text>
-      <SectionedMultiSelect
-        IconRenderer={() => null}
-        items={days}
-        uniqueKey="id"
-        onSelectedItemsChange={onSelectedDayChange}
-        selectedItems={selectedDays}
-        ref={refDay}
-        showCancelButton={true}
-        hideSearch={true}
-        hideSelect={true}
-        showDropDowns={true}
+      <Text
+        style={tw`text-6xl text-white font-bold uppercase text-center w-full px-4 mt-6`}
+      >
+        When?
+      </Text>
+      <DateTimePicker
+        testID="dateTimePicker"
+        value={defaultNotificationTime}
+        mode="time"
+        display="spinner"
+        onChange={onSelectedTimeChange}
+        minuteInterval={5}
+        style={tw`w-full bg-white my-4`}
       />
 
-      <View>
-        <Button
-          onPress={() => refDay?.current?._toggleSelector()}
-          title="Select Days"
-        />
+      {days.map(({ id, name }) => {
+        const isSelected = selectedDays.includes(id)
+        return (
+          <View
+            key={id}
+            style={tw`flex flex-row items-center justify-between w-full px-4 m-auto my-2`}
+          >
+            <Text style={tw`text-3xl uppercase font-bold text-white`}>
+              {name}
+            </Text>
+            <Switch
+              value={isSelected}
+              onValueChange={() => toggleSelectedDay(id, isSelected)}
+              trackColor={{ true: '#fff', false: '#000' }}
+              thumbColor={isSelected ? '#000' : '#fff'}
+              ios_backgroundColor="#000"
+            />
+          </View>
+        )
+      })}
 
-        {!!selectedDays.length && (
-          <TouchableOpacity onPress={() => refDay?.current?._removeAllItems()}>
-            <Text>Remove All</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-      <View style={{ margin: 10 }}>
-        <Button title={'Confirm'} onPress={handleSubmit(createReminder)} />
-      </View>
-    </View>
+      <TouchableOpacity onPress={handleSubmit(createReminder)}>
+        <Text style={tw`text-6xl text-center p-4 mt-8`}>✅</Text>
+      </TouchableOpacity>
+    </ScrollView>
   )
 }
 
