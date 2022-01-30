@@ -21,6 +21,7 @@ import {
 import { ErrorAlert } from '../utils'
 import { getRandomBrandColor } from '../../lib/utils'
 import useFetch from '../../hooks/useFetch'
+import { useReminderStore } from '../../store'
 import { POKE_URL } from '../../constants'
 import tw from '../../lib/tailwind'
 
@@ -76,16 +77,22 @@ function CreateReminderScreen({
     []
   )
 
+  const addReminder = useReminderStore((state) => state.addReminder)
+
   const createReminder = async (data: CreateReminderInput) => {
     try {
-      await fetch(`${POKE_URL}/reminders`, {
+      const response = await fetch(`${POKE_URL}/reminders`, {
         method: 'POST',
         body: JSON.stringify({ ...data, color: reminderColor }),
         headers: {
           'Content-Type': 'application/json',
         },
       })
-
+      const createdReminder = await response.json()
+      if (!!createdReminder) {
+        throw new Error('Try again!')
+      }
+      addReminder(createdReminder)
       navigation.navigate('Reminders')
     } catch (error: any) {
       ErrorAlert({ title: 'Error Creating Reminder', message: error?.message })
