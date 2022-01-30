@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
 import { useState, useCallback } from 'react'
+import shallow from 'zustand/shallow'
 
 import { RemindersScreenNavigationProps, Reminder } from '../../types'
 import { ErrorAlert } from '../utils'
@@ -17,6 +18,7 @@ import useFetch from '../../hooks/useFetch'
 import { POKE_URL } from '../../constants'
 import { supabase } from '../../lib/supabase'
 import tw from '../../lib/tailwind'
+import { useReminderStore } from '../../store'
 
 const ReminderItem = ({
   reminder: { text, notificationTime, notificationDays, emoji, color },
@@ -49,7 +51,10 @@ const ReminderItem = ({
 }
 
 function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
-  const [reminders, setReminders] = useState<Reminder[]>([])
+  const [reminders, setReminders] = useReminderStore(
+    (state) => [state.reminders, state.updateReminders],
+    shallow
+  )
   const [isLoading, setLoading] = useState(false)
   const [buttonHeight, setButtonHeight] = useState(0)
   const { fetch } = useFetch()
@@ -62,13 +67,13 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
         try {
           setLoading(true)
           const response = await fetch(`${POKE_URL}/reminders`)
-          const reminders = await response.json()
-          if (!Array.isArray(reminders)) {
+          const updatedReminders = await response.json()
+          if (!Array.isArray(updatedReminders)) {
             throw new Error('Check your network and retry!')
           }
 
           if (isActive) {
-            setReminders(reminders)
+            setReminders(updatedReminders)
           }
         } catch (error: any) {
           ErrorAlert({

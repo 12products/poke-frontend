@@ -9,7 +9,7 @@ import {
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { useCallback, useState, useEffect, useRef } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker'
 
 import {
@@ -21,6 +21,7 @@ import {
 import { ErrorAlert } from '../utils'
 import { getRandomBrandColor } from '../../lib/utils'
 import useFetch from '../../hooks/useFetch'
+import { useReminderStore } from '../../store'
 import { POKE_URL } from '../../constants'
 import tw from '../../lib/tailwind'
 
@@ -62,10 +63,12 @@ function CreateReminderScreen({
   })
 
   const [selectedDays, setSelectedDays] = useState<number[]>([])
+  const [time, setTime] = useState<Date>(defaultNotificationTime)
   const { fetch } = useFetch()
 
   // @ts-ignore
   const onSelectedTimeChange = (_, selectedTime: Date | undefined) => {
+    setTime(selectedTime || defaultNotificationTime)
     setValue('notificationTime', selectedTime?.toISOString() || '')
   }
 
@@ -76,16 +79,22 @@ function CreateReminderScreen({
     []
   )
 
+  const addReminder = useReminderStore((state) => state.addReminder)
+
   const createReminder = async (data: CreateReminderInput) => {
     try {
-      await fetch(`${POKE_URL}/reminders`, {
+      const response = await fetch(`${POKE_URL}/reminders`, {
         method: 'POST',
         body: JSON.stringify({ ...data, color: reminderColor }),
         headers: {
           'Content-Type': 'application/json',
         },
       })
-
+      const createdReminder = await response.json()
+      if (!createdReminder) {
+        throw new Error('Try again!')
+      }
+      addReminder(createdReminder)
       navigation.navigate('Reminders')
     } catch (error: any) {
       ErrorAlert({ title: 'Error Creating Reminder', message: error?.message })
@@ -142,7 +151,7 @@ function CreateReminderScreen({
       </Text>
       <DateTimePicker
         testID="dateTimePicker"
-        value={defaultNotificationTime}
+        value={time}
         mode="time"
         display="spinner"
         onChange={onSelectedTimeChange}
