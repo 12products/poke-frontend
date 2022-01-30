@@ -63,10 +63,12 @@ function CreateReminderScreen({
   })
 
   const [selectedDays, setSelectedDays] = useState<number[]>([])
+  const [time, setTime] = useState<Date>(defaultNotificationTime)
   const { fetch } = useFetch()
 
   // @ts-ignore
   const onSelectedTimeChange = (_, selectedTime: Date | undefined) => {
+    setTime(selectedTime || defaultNotificationTime)
     setValue('notificationTime', selectedTime?.toISOString() || '')
   }
 
@@ -89,7 +91,7 @@ function CreateReminderScreen({
         },
       })
       const createdReminder = await response.json()
-      if (!!createdReminder) {
+      if (!createdReminder) {
         throw new Error('Try again!')
       }
       addReminder(createdReminder)
@@ -149,7 +151,7 @@ function CreateReminderScreen({
       </Text>
       <DateTimePicker
         testID="dateTimePicker"
-        value={defaultNotificationTime}
+        value={time}
         mode="time"
         display="spinner"
         onChange={onSelectedTimeChange}
