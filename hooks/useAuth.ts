@@ -1,6 +1,6 @@
 import shallow from 'zustand/shallow'
 
-import { useStore } from '../store'
+import { useAuthStore } from '../store'
 import { supabase } from '../lib/supabase'
 
 function useAuth() {
@@ -12,7 +12,7 @@ function useAuth() {
     setHasOnboarded,
     user,
     setUser,
-  } = useStore(
+  } = useAuthStore(
     (state) => ({
       session: state.session,
       isAuthenticated: state.isAuthenticated,

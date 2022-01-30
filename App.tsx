@@ -6,10 +6,8 @@ import { Subscription } from '@supabase/supabase-js'
 
 import Navigation from './navigation'
 import { supabase } from './lib/supabase'
-import { useStore } from './store'
+import { useAuthStore } from './store'
 import useAuth from './hooks/useAuth'
-import { POKE_URL } from './constants'
-import useFetch from './hooks/useFetch'
 
 // Create a shim for Promise.allSettled because
 // it's not in React Native yet and Supabase uses it
@@ -17,7 +15,7 @@ allSettled.shim()
 
 export default function App() {
   const [hasLoadedAuth, setHasLoadedAuth] = useState(false)
-  const hasHydrated = useStore((state) => state.hasHydrated)
+  const hasHydrated = useAuthStore((state) => state.hasHydrated)
   const { session, setSession } = useAuth()
 
   useEffect(() => {
