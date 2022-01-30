@@ -49,7 +49,7 @@ const ReminderItem = ({
 }
 
 function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
-  const [reminders, setReminders] = useState([])
+  const [reminders, setReminders] = useState<Reminder[]>([])
   const [isLoading, setLoading] = useState(false)
   const [buttonHeight, setButtonHeight] = useState(0)
   const { fetch } = useFetch()
@@ -63,13 +63,16 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
           setLoading(true)
           const response = await fetch(`${POKE_URL}/reminders`)
           const reminders = await response.json()
+          if (!Array.isArray(reminders)) {
+            throw new Error('Check your network and retry!')
+          }
 
           if (isActive) {
             setReminders(reminders)
           }
         } catch (error: any) {
           ErrorAlert({
-            title: 'Error on Fetching Pokes',
+            title: 'Unknown Error Fetching Pokes',
             message: error?.message,
           })
         } finally {
