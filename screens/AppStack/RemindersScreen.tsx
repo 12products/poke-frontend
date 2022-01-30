@@ -6,7 +6,9 @@ import {
   TouchableOpacity,
   ScrollView,
   LayoutChangeEvent,
+  Animated,
 } from 'react-native'
+import { Swipeable } from 'react-native-gesture-handler'
 import { useFocusEffect } from '@react-navigation/native'
 import { useState, useCallback } from 'react'
 import shallow from 'zustand/shallow'
@@ -20,6 +22,29 @@ import { supabase } from '../../lib/supabase'
 import tw from '../../lib/tailwind'
 import { useReminderStore } from '../../store'
 
+const renderRightActions = (
+  progress: Animated.AnimatedInterpolation,
+  dragX: Animated.AnimatedInterpolation
+) => {
+  const opacity = dragX.interpolate({
+    inputRange: [-150, 0],
+    outputRange: [1, 0],
+    extrapolate: 'clamp',
+  })
+
+  return (
+    <Animated.View style={[{ opacity }]}>
+      <TouchableOpacity>
+        <Text>Delete</Text>
+      </TouchableOpacity>
+    </Animated.View>
+  )
+}
+
+const ReminderView = ({ children }) => (
+  <Swipeable renderRightActions={renderRightActions}>{children}</Swipeable>
+)
+
 const ReminderItem = ({
   reminder: { text, notificationTime, notificationDays, emoji, color },
 }: {
@@ -27,26 +52,28 @@ const ReminderItem = ({
 }) => {
   const reminderTime = new Date(notificationTime)
   return (
-    <View style={tw`bg-brand-${color} p-4`}>
-      <View style={tw`flex flex-row items-center`}>
-        <Text style={tw`text-5xl py-2 mr-2`}>{emoji}</Text>
-        <Text style={tw`text-2xl text-white font-bold uppercase`}>
-          {text.slice(0, 18)}
-          {text.length > 18 ? '...' : ''}
+    <ReminderView>
+      <View style={tw`bg-brand-${color} p-4`}>
+        <View style={tw`flex flex-row items-center`}>
+          <Text style={tw`text-5xl py-2 mr-2`}>{emoji}</Text>
+          <Text style={tw`text-2xl text-white font-bold uppercase`}>
+            {text.slice(0, 18)}
+            {text.length > 18 ? '...' : ''}
+          </Text>
+        </View>
+
+        <Text style={tw`uppercase font-bold text-white`}>
+          {`${reminderTime.getHours() % 12}:${
+            reminderTime.getMinutes() === 0 ? '00' : reminderTime.getMinutes()
+          }${reminderTime.getHours() > 12 ? 'pm' : 'am'}`}{' '}
+          on{' '}
+          {notificationDays
+            .sort((dayA, dayB) => dayA - dayB)
+            .map((num) => numToDays[num].slice(0, 3))
+            .join(', ')}
         </Text>
       </View>
-
-      <Text style={tw`uppercase font-bold text-white`}>
-        {`${reminderTime.getHours() % 12}:${
-          reminderTime.getMinutes() === 0 ? '00' : reminderTime.getMinutes()
-        }${reminderTime.getHours() > 12 ? 'pm' : 'am'}`}{' '}
-        on{' '}
-        {notificationDays
-          .sort((dayA, dayB) => dayA - dayB)
-          .map((num) => numToDays[num].slice(0, 3))
-          .join(', ')}
-      </Text>
-    </View>
+    </ReminderView>
   )
 }
 
