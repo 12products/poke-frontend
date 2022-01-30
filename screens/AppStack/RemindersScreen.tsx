@@ -8,10 +8,11 @@ import {
   LayoutChangeEvent,
   Animated,
 } from 'react-native'
-import { Swipeable } from 'react-native-gesture-handler'
+import { Swipeable, RectButton } from 'react-native-gesture-handler'
 import { useFocusEffect } from '@react-navigation/native'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, FC } from 'react'
 import shallow from 'zustand/shallow'
+import Interactable from 'react-native-interactable'
 
 import { RemindersScreenNavigationProps, Reminder } from '../../types'
 import { ErrorAlert } from '../utils'
@@ -22,37 +23,60 @@ import { supabase } from '../../lib/supabase'
 import tw from '../../lib/tailwind'
 import { useReminderStore } from '../../store'
 
+const deleteReminders = () => {
+  const { fetch } = useFetch()
+  try {
+    const response = fetch(`${POKE_URL}/reminders`)
+  } catch (e) {}
+}
 const renderRightActions = (
   progress: Animated.AnimatedInterpolation,
   dragX: Animated.AnimatedInterpolation
 ) => {
   const opacity = dragX.interpolate({
-    inputRange: [-150, 0],
+    inputRange: [-80, 0],
     outputRange: [1, 0],
     extrapolate: 'clamp',
   })
 
   return (
     <Animated.View style={[{ opacity }]}>
-      <TouchableOpacity>
+      <RectButton
+        onPress={() => console.log('SUccess')}
+        style={tw`flex flex-row justify-end flex-auto`}
+      >
         <Text>Delete</Text>
-      </TouchableOpacity>
+      </RectButton>
     </Animated.View>
   )
 }
 
-const ReminderView = ({ children }) => (
-  <Swipeable renderRightActions={renderRightActions}>{children}</Swipeable>
-)
-
 const ReminderItem = ({
-  reminder: { text, notificationTime, notificationDays, emoji, color },
+  reminder: { id, text, notificationTime, notificationDays, emoji, color },
 }: {
   reminder: Reminder
 }) => {
   const reminderTime = new Date(notificationTime)
+  const { fetch } = useFetch()
+  const removeReminder = useReminderStore((state) => state.removeReminder)
+  const handleOnSnap = (id: string) => {
+    try {
+      const response = fetch(`${POKE_URL}/reminders/${id}`, {
+        method: 'DELETE',
+      })
+
+      removeReminder(id)
+    } catch (e) {
+      ErrorAlert({ title: 'Error deleting', message: 'Try again!' })
+    }
+  }
+
   return (
-    <ReminderView>
+    <Interactable.View
+      horizontalOnly={true}
+      snapPoints={[{ x: 0 }, { x: -200 }]}
+      onSnap={(e) => handleOnSnap(id)}
+    >
       <View style={tw`bg-brand-${color} p-4`}>
         <View style={tw`flex flex-row items-center`}>
           <Text style={tw`text-5xl py-2 mr-2`}>{emoji}</Text>
@@ -73,7 +97,7 @@ const ReminderItem = ({
             .join(', ')}
         </Text>
       </View>
-    </ReminderView>
+    </Interactable.View>
   )
 }
 

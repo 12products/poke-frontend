@@ -22,6 +22,8 @@ target 'pokefrontend' do
   #   use_flipper!('Flipper' => '0.75.1', 'Flipper-Folly' => '2.5.3', 'Flipper-RSocket' => '1.3.1')
   # end
 
+  pod 'Interactable', :path => '../node_modules/react-native-interactable'
+
   post_install do |installer|
     react_native_post_install(installer)
 
