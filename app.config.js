@@ -8,4 +8,10 @@ export default {
     supabasePublicKey: process.env.SUPABASE_PUBLIC_KEY,
     supabaseUrl: process.env.SUPABASE_URL,
   },
+  android: {
+    package: 'xyz.twelveproducts.poke',
+  },
+  ios: {
+    bundleIdentifier: 'xyz.twelveproducts.poke',
+  },
 }
