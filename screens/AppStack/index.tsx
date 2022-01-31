@@ -1,13 +1,14 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import * as InAppPurchases from 'expo-in-app-purchases'
 
 import RemindersScreen from './RemindersScreen'
 import CreateReminderScreen from './CreateReminderScreen'
+import SettingsScreen from './SettingsScreen'
+import useIAP from '../../hooks/useIAP'
 
 const Stack = createNativeStackNavigator()
 
 export function AppStack() {
-  InAppPurchases.connectAsync()
+  useIAP()
 
   return (
     <Stack.Navigator
@@ -18,6 +19,7 @@ export function AppStack() {
     >
       <Stack.Screen name="Reminders" component={RemindersScreen} />
       <Stack.Screen name="CreateReminder" component={CreateReminderScreen} />
+      <Stack.Screen name="Settings" component={SettingsScreen} />
     </Stack.Navigator>
   )
 }

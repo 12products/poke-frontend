@@ -1,6 +1,7 @@
 import shallow from 'zustand/shallow'
 
 import { useAuthStore } from '../store'
+import { useReminderStore } from '../store'
 import { supabase } from '../lib/supabase'
 
 function useAuth() {
@@ -12,6 +13,8 @@ function useAuth() {
     setHasOnboarded,
     user,
     setUser,
+    activePlan,
+    setActivePlan,
   } = useAuthStore(
     (state) => ({
       session: state.session,
@@ -21,7 +24,13 @@ function useAuth() {
       setHasOnboarded: state.setHasOnboarded,
       user: state.user,
       setUser: state.setUser,
+      activePlan: state.activePlan,
+      setActivePlan: state.setActivePlan,
     }),
+    shallow
+  )
+  const setReminders = useReminderStore(
+    (state) => state.updateReminders,
     shallow
   )
 
@@ -36,6 +45,15 @@ function useAuth() {
     setSession(data)
   }
 
+  async function logOut() {
+    // Clears out the store
+    setSession(null)
+    setActivePlan(null)
+    setReminders([])
+
+    await supabase.auth.signOut()
+  }
+
   return {
     session,
     isAuthenticated,
@@ -45,6 +63,8 @@ function useAuth() {
     setHasOnboarded,
     user,
     setUser,
+    activePlan,
+    logOut,
   }
 }
 

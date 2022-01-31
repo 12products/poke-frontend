@@ -5,10 +5,11 @@ import {
   TextInput,
   TouchableOpacity,
   Switch,
+  SafeAreaView,
 } from 'react-native'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useCallback, useState, useEffect } from 'react'
+import { useCallback, useState, useEffect, useRef } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import * as yup from 'yup'
 
@@ -47,6 +48,10 @@ function CreateReminderScreen({
   navigation,
 }: CreateReminderScreenNavigationProps) {
   const defaultNotificationTime = new Date()
+  const scrollRef = useRef<ScrollView>()
+  const [selectedDays, setSelectedDays] = useState<number[]>([])
+  const [time, setTime] = useState<Date>(defaultNotificationTime)
+  const { fetch } = useFetch()
 
   const {
     register,
@@ -61,10 +66,6 @@ function CreateReminderScreen({
       notificationDays: [],
     },
   })
-
-  const [selectedDays, setSelectedDays] = useState<number[]>([])
-  const [time, setTime] = useState<Date>(defaultNotificationTime)
-  const { fetch } = useFetch()
 
   // @ts-ignore
   const onSelectedTimeChange = (_, selectedTime: Date | undefined) => {
@@ -123,67 +124,77 @@ function CreateReminderScreen({
   }
 
   return (
-    <ScrollView
-      contentContainerStyle={tw`bg-brand-${reminderColor} pt-10 pb-10`}
-    >
-      <Text
-        style={tw`text-6xl text-white font-bold uppercase text-center w-full px-4 mt-8 mb-4`}
+    <SafeAreaView style={tw`bg-brand-${reminderColor}`}>
+      <ScrollView
+        // @ts-ignore
+        ref={scrollRef}
+        contentContainerStyle={tw`bg-brand-${reminderColor}`}
       >
-        What?
-      </Text>
-      <View style={tw`bg-white min-h-12`}>
-        <TextInput
-          onChangeText={onChangeField('text')}
-          style={tw`text-4xl w-full bg-white p-4 my-4 text-center`}
-          multiline
-        ></TextInput>
-      </View>
-      {errors?.text && (
-        <Text style={tw`text-2xl text-white font-bold uppercase text-center`}>
-          ☝️ we totally need this.
+        <Text
+          style={tw`text-6xl text-white font-bold uppercase text-center w-full px-4 mt-8 mb-4`}
+        >
+          What?
         </Text>
-      )}
-
-      <Text
-        style={tw`text-6xl text-white font-bold uppercase text-center w-full px-4 mt-6`}
-      >
-        When?
-      </Text>
-      <DateTimePicker
-        testID="dateTimePicker"
-        value={time}
-        mode="time"
-        display="spinner"
-        onChange={onSelectedTimeChange}
-        minuteInterval={5}
-        style={tw`w-full bg-white my-4`}
-      />
-
-      {days.map(({ id, name }) => {
-        const isSelected = selectedDays.includes(id)
-        return (
-          <View
-            key={id}
-            style={tw`flex flex-row items-center justify-between w-full px-4 m-auto my-2`}
+        <View style={tw`bg-white min-h-12`}>
+          <TextInput
+            onChangeText={onChangeField('text')}
+            style={tw`text-4xl w-full bg-white p-4 my-4 text-center`}
+            multiline
+          ></TextInput>
+        </View>
+        {errors?.text && (
+          <Text
+            style={tw`text-2xl bg-black py-2 text-white font-bold uppercase text-center`}
           >
-            <Text style={tw`text-3xl uppercase font-bold text-white`}>
-              {name}
-            </Text>
-            <Switch
-              value={isSelected}
-              onValueChange={() => toggleSelectedDay(id, isSelected)}
-              trackColor={{ true: '#fff', false: '#000' }}
-              thumbColor={isSelected ? '#000' : '#fff'}
-              ios_backgroundColor="#000"
-            />
-          </View>
-        )
-      })}
+            ☝️ we totally need this.
+          </Text>
+        )}
 
-      <TouchableOpacity onPress={handleSubmit(createReminder)}>
-        <Text style={tw`text-6xl text-center p-4 mt-8`}>✅</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <Text
+          style={tw`text-6xl text-white font-bold uppercase text-center w-full px-4 mt-6`}
+        >
+          When?
+        </Text>
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={time}
+          mode="time"
+          display="spinner"
+          onChange={onSelectedTimeChange}
+          minuteInterval={5}
+          style={tw`w-full bg-white my-4`}
+        />
+
+        {days.map(({ id, name }) => {
+          const isSelected = selectedDays.includes(id)
+          return (
+            <View
+              key={id}
+              style={tw`flex flex-row items-center justify-between w-full px-4 m-auto my-2`}
+            >
+              <Text style={tw`text-3xl uppercase font-bold text-white`}>
+                {name}
+              </Text>
+              <Switch
+                value={isSelected}
+                onValueChange={() => toggleSelectedDay(id, isSelected)}
+                trackColor={{ true: '#fff', false: '#000' }}
+                thumbColor={isSelected ? '#000' : '#fff'}
+                ios_backgroundColor="#000"
+              />
+            </View>
+          )
+        })}
+
+        <TouchableOpacity
+          onPress={handleSubmit(createReminder, () =>
+            scrollRef?.current?.scrollTo({ y: 0 })
+          )}
+        >
+          <Text style={tw`text-6xl text-center p-4 mt-8`}>✅</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 

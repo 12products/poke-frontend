@@ -83,7 +83,7 @@ function SignInScreen({ navigation, route }: SignInScreenNavigationProp) {
         />
 
         {!validPhoneNumber && (
-          <View style={tw`mb-4`}>
+          <View style={tw`-mt-4 mb-4 py-2 bg-black`}>
             <Text
               style={tw`text-3xl text-white font-bold uppercase text-right`}
             >
