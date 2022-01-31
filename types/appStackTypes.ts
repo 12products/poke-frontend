@@ -24,6 +24,11 @@ export type RemindersScreenNavigationProps = NativeStackScreenProps<
   'Reminders'
 >
 
+export type SettingsScreenNavigationProps = NativeStackScreenProps<
+  AppStackParamList,
+  'Settings'
+>
+
 export interface Reminder {
   id: string
   text: string

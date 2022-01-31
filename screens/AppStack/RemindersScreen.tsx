@@ -1,8 +1,6 @@
 import {
   Text,
   View,
-  Button,
-  ActivityIndicator,
   TouchableOpacity,
   ScrollView,
   LayoutChangeEvent,
@@ -15,7 +13,6 @@ import { RemindersScreenNavigationProps, Reminder } from '../../types'
 import { ErrorAlert } from '../utils'
 import useFetch from '../../hooks/useFetch'
 import { POKE_URL } from '../../constants'
-import { supabase } from '../../lib/supabase'
 import tw from '../../lib/tailwind'
 import { useReminderStore } from '../../store'
 import { ReminderItem } from '../../components'
@@ -25,7 +22,6 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
     (state) => [state.reminders, state.updateReminders],
     shallow
   )
-  const [isLoading, setLoading] = useState(false)
   const [buttonHeight, setButtonHeight] = useState(0)
   const { fetch } = useFetch()
 
@@ -35,7 +31,6 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
 
       const getReminders = async () => {
         try {
-          setLoading(true)
           const response = await fetch(`${POKE_URL}/reminders`)
           const updatedReminders = await response.json()
           if (!Array.isArray(updatedReminders)) {
@@ -50,8 +45,6 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
             title: 'Unknown Error Fetching Pokes',
             message: error?.message,
           })
-        } finally {
-          setLoading(false)
         }
       }
 
@@ -84,23 +77,24 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
         </TouchableOpacity>
       </View>
 
-      <Button
-        title="LOGOUT"
-        onPress={async () => {
-          await supabase.auth.signOut()
-        }}
-      ></Button>
+      <TouchableOpacity
+        style={tw`w-full bg-black`}
+        activeOpacity={1}
+        onPress={() => navigation.navigate('Settings')}
+      >
+        <Text
+          style={tw`text-4xl text-center font-bold uppercase p-2 text-white`}
+        >
+          Settings
+        </Text>
+      </TouchableOpacity>
 
       <View style={tw`bg-white`}>
-        {isLoading ? (
-          <ActivityIndicator />
-        ) : (
-          reminders.map((reminder: Reminder) => (
-            <View style={tw`bg-black`}>
-              <ReminderItem key={reminder.id} reminder={reminder} />
-            </View>
-          ))
-        )}
+        {reminders.map((reminder: Reminder) => (
+          <View style={tw`bg-black`}>
+            <ReminderItem key={reminder.id} reminder={reminder} />
+          </View>
+        ))}
       </View>
     </ScrollView>
   )

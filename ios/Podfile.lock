@@ -11,6 +11,8 @@ PODS:
     - ExpoModulesCore
   - EXFont (10.0.4):
     - ExpoModulesCore
+  - EXInAppPurchases (12.1.0):
+    - ExpoModulesCore
   - EXKeepAwake (10.0.1):
     - ExpoModulesCore
   - Expo (44.0.5):
@@ -339,6 +341,7 @@ DEPENDENCIES:
   - EXErrorRecovery (from `../node_modules/expo-error-recovery/ios`)
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
+  - EXInAppPurchases (from `../node_modules/expo-in-app-purchases/ios`)
   - EXKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - Expo (from `../node_modules/expo/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core/ios`)
@@ -398,6 +401,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-file-system/ios"
   EXFont:
     :path: "../node_modules/expo-font/ios"
+  EXInAppPurchases:
+    :path: "../node_modules/expo-in-app-purchases/ios"
   EXKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
   Expo:
@@ -485,13 +490,14 @@ SPEC CHECKSUMS:
   EXErrorRecovery: deea88a01d38f8b1c1181b4e1d179b0ba0e4bb5b
   EXFileSystem: e8013deaa114cab168a6f53be956b9334c3d02cf
   EXFont: 1fb13af43dc517c01c0ff21a6e32f9f9bf2ea602
+  EXInAppPurchases: 9c65b5ed6313e3aa32a5b75e4bcbce19868d66b4
   EXKeepAwake: b571c2ad8323b2fced6e907766e2549f75119471
   Expo: 337c72b7e9314e93023af79c875930db8e008275
   ExpoModulesCore: 64abda7af7cf659d2fa092934e29c6f4ea7e849f
   EXSplashScreen: 7872675b95bb07c25f922b3d3dfae70c76fb5a00
   EXWebBrowser: 37388663fa51cbfc883de2244931a5182d948e5f
   FBLazyVector: c71c5917ec0ad2de41d5d06a5855f6d5eda06971
-  FBReactNativeSpec: 0e6400eefefa120f3fded611649a950f86c3336b
+  FBReactNativeSpec: 8577496588f4c76d8b9495cd59f83b284cff6a66
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   Interactable: 411887c89fa16ac41f8e7898aca06dcad55e5f22
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
@@ -525,6 +531,6 @@ SPEC CHECKSUMS:
   RNScreens: d6da2b9e29cf523832c2542f47bf1287318b1868
   Yoga: e6ecf3fa25af9d4c87e94ad7d5d292eedef49749
 
-PODFILE CHECKSUM: 4284e2bfd3f059c5e9070e6f0f13c74066f90f15
+PODFILE CHECKSUM: 04f8d6bb2cb2afdef1f2ff834078f30e4b3b205a
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.0

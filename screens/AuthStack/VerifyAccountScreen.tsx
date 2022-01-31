@@ -89,12 +89,13 @@ function VerifyAccountScreen({
 
         <TextInput
           textContentType="oneTimeCode"
-          style={tw`text-3xl w-full bg-white p-4 my-4 text-right`}
+          style={tw`text-3xl w-full bg-white p-4 mt-4 text-right`}
           onChangeText={onChangeField('token')}
+          keyboardType="numeric"
         ></TextInput>
 
         {errorCount > 0 && (
-          <View style={tw`mb-4`}>
+          <View style={tw`bg-black py-2`}>
             <Text
               style={tw`text-2xl text-white font-bold uppercase text-right`}
             >
@@ -110,7 +111,7 @@ function VerifyAccountScreen({
 
         <TouchableOpacity
           onPress={handleSubmit(verifyOTP)}
-          style={tw`flex flex-row justify-end w-full`}
+          style={tw`flex flex-row justify-end w-full mt-4`}
         >
           <Text style={tw`text-4xl`}>🔑 </Text>
           <Text style={tw`text-5xl text-white font-bold uppercase`}>
