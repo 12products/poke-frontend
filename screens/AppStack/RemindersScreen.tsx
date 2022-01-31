@@ -13,42 +13,12 @@ import shallow from 'zustand/shallow'
 
 import { RemindersScreenNavigationProps, Reminder } from '../../types'
 import { ErrorAlert } from '../utils'
-import { numToDays } from '../../lib/utils'
 import useFetch from '../../hooks/useFetch'
 import { POKE_URL } from '../../constants'
 import { supabase } from '../../lib/supabase'
 import tw from '../../lib/tailwind'
 import { useReminderStore } from '../../store'
-
-const ReminderItem = ({
-  reminder: { text, notificationTime, notificationDays, emoji, color },
-}: {
-  reminder: Reminder
-}) => {
-  const reminderTime = new Date(notificationTime)
-  return (
-    <View style={tw`bg-brand-${color} p-4`}>
-      <View style={tw`flex flex-row items-center`}>
-        <Text style={tw`text-5xl py-2 mr-2`}>{emoji}</Text>
-        <Text style={tw`text-2xl text-white font-bold uppercase`}>
-          {text.slice(0, 18)}
-          {text.length > 18 ? '...' : ''}
-        </Text>
-      </View>
-
-      <Text style={tw`uppercase font-bold text-white`}>
-        {`${reminderTime.getHours() % 12}:${
-          reminderTime.getMinutes() === 0 ? '00' : reminderTime.getMinutes()
-        }${reminderTime.getHours() > 12 ? 'pm' : 'am'}`}{' '}
-        on{' '}
-        {notificationDays
-          .sort((dayA, dayB) => dayA - dayB)
-          .map((num) => numToDays[num].slice(0, 3))
-          .join(', ')}
-      </Text>
-    </View>
-  )
-}
+import { ReminderItem } from '../../components'
 
 function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
   const [reminders, setReminders] = useReminderStore(
@@ -121,12 +91,14 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
         }}
       ></Button>
 
-      <View style={tw`h-full`}>
+      <View style={tw`bg-white`}>
         {isLoading ? (
           <ActivityIndicator />
         ) : (
           reminders.map((reminder: Reminder) => (
-            <ReminderItem key={reminder.id} reminder={reminder} />
+            <View style={tw`bg-black`}>
+              <ReminderItem key={reminder.id} reminder={reminder} />
+            </View>
           ))
         )}
       </View>

@@ -5,7 +5,7 @@ export type ReminderState = {
   reminders: Reminder[]
   updateReminders: (reminders: Reminder[]) => void
   addReminder: (reminder: Reminder) => void
-  removeReminder: (reminder: Reminder) => void
+  removeReminder: (reminderId: string) => void
 }
 
 export const useReminderStore = create<ReminderState>((set) => ({
@@ -13,8 +13,8 @@ export const useReminderStore = create<ReminderState>((set) => ({
   updateReminders: (reminders) => set({ reminders }),
   addReminder: (reminder) =>
     set((state) => ({ reminders: [...state.reminders, reminder] })),
-  removeReminder: (reminder) =>
+  removeReminder: (reminderId) =>
     set((state) => ({
-      reminders: state.reminders.filter((r) => r.id !== reminder.id),
+      reminders: state.reminders.filter((r) => r.id !== reminderId),
     })),
 }))

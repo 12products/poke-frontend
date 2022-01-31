@@ -8,9 +8,9 @@ import {
 } from 'react-native'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
 import { useCallback, useState, useEffect } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker'
+import * as yup from 'yup'
 
 import {
   Day,
@@ -25,7 +25,13 @@ import { useReminderStore } from '../../store'
 import { POKE_URL } from '../../constants'
 import tw from '../../lib/tailwind'
 
-const days: Day[] = [
+export const createReminderSchema = yup.object().shape({
+  text: yup.string().required(),
+  notificationDays: yup.array().of(yup.number()),
+  notificationTime: yup.string(),
+})
+
+export const days: Day[] = [
   { id: 0, name: 'Sunday' },
   { id: 1, name: 'Monday' },
   { id: 2, name: 'Tuesday' },
@@ -34,12 +40,6 @@ const days: Day[] = [
   { id: 5, name: 'Friday' },
   { id: 6, name: 'Saturday' },
 ]
-
-const createReminderSchema = yup.object().shape({
-  text: yup.string().required(),
-  notificationDays: yup.array().of(yup.number()),
-  notificationTime: yup.string(),
-})
 
 const reminderColor = getRandomBrandColor()
 
