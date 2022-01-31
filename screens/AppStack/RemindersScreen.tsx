@@ -6,100 +6,19 @@ import {
   TouchableOpacity,
   ScrollView,
   LayoutChangeEvent,
-  Animated,
 } from 'react-native'
-import { Swipeable, RectButton } from 'react-native-gesture-handler'
 import { useFocusEffect } from '@react-navigation/native'
-import { useState, useCallback, FC } from 'react'
+import { useState, useCallback } from 'react'
 import shallow from 'zustand/shallow'
-import Interactable from 'react-native-interactable'
 
 import { RemindersScreenNavigationProps, Reminder } from '../../types'
 import { ErrorAlert } from '../utils'
-import { numToDays } from '../../lib/utils'
 import useFetch from '../../hooks/useFetch'
 import { POKE_URL } from '../../constants'
 import { supabase } from '../../lib/supabase'
 import tw from '../../lib/tailwind'
 import { useReminderStore } from '../../store'
-
-const deleteReminders = () => {
-  const { fetch } = useFetch()
-  try {
-    const response = fetch(`${POKE_URL}/reminders`)
-  } catch (e) {}
-}
-const renderRightActions = (
-  progress: Animated.AnimatedInterpolation,
-  dragX: Animated.AnimatedInterpolation
-) => {
-  const opacity = dragX.interpolate({
-    inputRange: [-80, 0],
-    outputRange: [1, 0],
-    extrapolate: 'clamp',
-  })
-
-  return (
-    <Animated.View style={[{ opacity }]}>
-      <RectButton
-        onPress={() => console.log('SUccess')}
-        style={tw`flex flex-row justify-end flex-auto`}
-      >
-        <Text>Delete</Text>
-      </RectButton>
-    </Animated.View>
-  )
-}
-
-const ReminderItem = ({
-  reminder: { id, text, notificationTime, notificationDays, emoji, color },
-}: {
-  reminder: Reminder
-}) => {
-  const reminderTime = new Date(notificationTime)
-  const { fetch } = useFetch()
-  const removeReminder = useReminderStore((state) => state.removeReminder)
-  const handleOnSnap = (id: string) => {
-    try {
-      const response = fetch(`${POKE_URL}/reminders/${id}`, {
-        method: 'DELETE',
-      })
-
-      removeReminder(id)
-    } catch (e) {
-      ErrorAlert({ title: 'Error deleting', message: 'Try again!' })
-    }
-  }
-
-  return (
-    <Interactable.View
-      horizontalOnly={true}
-      snapPoints={[{ x: 0 }, { x: -200 }]}
-      onSnap={(e) => handleOnSnap(id)}
-    >
-      <View style={tw`bg-brand-${color} p-4`}>
-        <View style={tw`flex flex-row items-center`}>
-          <Text style={tw`text-5xl py-2 mr-2`}>{emoji}</Text>
-          <Text style={tw`text-2xl text-white font-bold uppercase`}>
-            {text.slice(0, 18)}
-            {text.length > 18 ? '...' : ''}
-          </Text>
-        </View>
-
-        <Text style={tw`uppercase font-bold text-white`}>
-          {`${reminderTime.getHours() % 12}:${
-            reminderTime.getMinutes() === 0 ? '00' : reminderTime.getMinutes()
-          }${reminderTime.getHours() > 12 ? 'pm' : 'am'}`}{' '}
-          on{' '}
-          {notificationDays
-            .sort((dayA, dayB) => dayA - dayB)
-            .map((num) => numToDays[num].slice(0, 3))
-            .join(', ')}
-        </Text>
-      </View>
-    </Interactable.View>
-  )
-}
+import { ReminderItem } from '../../components'
 
 function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
   const [reminders, setReminders] = useReminderStore(
@@ -172,12 +91,14 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
         }}
       ></Button>
 
-      <View style={tw`h-full`}>
+      <View style={tw`bg-white`}>
         {isLoading ? (
           <ActivityIndicator />
         ) : (
           reminders.map((reminder: Reminder) => (
-            <ReminderItem key={reminder.id} reminder={reminder} />
+            <View style={tw`bg-black`}>
+              <ReminderItem key={reminder.id} reminder={reminder} />
+            </View>
           ))
         )}
       </View>
