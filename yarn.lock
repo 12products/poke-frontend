@@ -3560,6 +3560,11 @@ expo-font@~10.0.4:
   dependencies:
     fontfaceobserver "^2.1.0"
 
+expo-in-app-purchases@~12.1.0:
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/expo-in-app-purchases/-/expo-in-app-purchases-12.1.0.tgz#78e4283c6734365d82af79efdcef86b96deb9fe6"
+  integrity sha512-uGKGrqbaw69kwoYiDCYxvmqJEtpjhH2+zweV3Og9ToUWOi1OxYl+3/fAoKW4r1qm9RSZe5RoC6vjlCTRnbMjZg==
+
 expo-keep-awake@~10.0.1:
   version "10.0.1"
   resolved "https://registry.yarnpkg.com/expo-keep-awake/-/expo-keep-awake-10.0.1.tgz#9f1176216c41eee20843c8232acfdca2bc32d334"

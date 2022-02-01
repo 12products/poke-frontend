@@ -13,8 +13,8 @@ function useAuth() {
     setHasOnboarded,
     user,
     setUser,
-    activePlan,
-    setActivePlan,
+    activeSubscription,
+    setActiveSubscription,
   } = useAuthStore(
     (state) => ({
       session: state.session,
@@ -24,8 +24,8 @@ function useAuth() {
       setHasOnboarded: state.setHasOnboarded,
       user: state.user,
       setUser: state.setUser,
-      activePlan: state.activePlan,
-      setActivePlan: state.setActivePlan,
+      activeSubscription: state.activeSubscription,
+      setActiveSubscription: state.setActiveSubscription,
     }),
     shallow
   )
@@ -48,7 +48,7 @@ function useAuth() {
   async function logOut() {
     // Clears out the store
     setSession(null)
-    setActivePlan(null)
+    setActiveSubscription(null)
     setReminders([])
 
     await supabase.auth.signOut()
@@ -63,7 +63,7 @@ function useAuth() {
     setHasOnboarded,
     user,
     setUser,
-    activePlan,
+    activeSubscription,
     logOut,
   }
 }

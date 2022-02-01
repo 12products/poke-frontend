@@ -13,13 +13,13 @@ import tw from '../../lib/tailwind'
 
 function SettingsScreen({ navigation }: SettingsScreenNavigationProps) {
   const { purchaseSubscription, products, isProcessing } = useIAP()
-  const { activePlan, logOut } = useAuth()
+  const { activeSubscription, logOut } = useAuth()
 
   return (
     <SafeAreaView style={tw`h-full flex justify-center`}>
       {products.length > 0 && (
         <View>
-          {!activePlan ? (
+          {activeSubscription ? (
             <>
               <Text style={tw`text-6xl mb-2 text-center`}>🙏</Text>
 
