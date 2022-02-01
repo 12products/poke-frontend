@@ -35,6 +35,7 @@
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = pokefrontend/SplashScreen.storyboard; sourceTree = "<group>"; };
 		AB0EBE572168434AB494126F /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "pokefrontend/noop-file.swift"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
+		DA3A18FD27A8E0C6002359BD /* libEXInAppPurchases.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libEXInAppPurchases.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAF04BF027A71D9D005DBBE3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F9FD57131A1551B70DD8F804 /* Pods-poke.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-poke.release.xcconfig"; path = "Target Support Files/Pods-poke/Pods-poke.release.xcconfig"; sourceTree = "<group>"; };
@@ -73,6 +74,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DA3A18FD27A8E0C6002359BD /* libEXInAppPurchases.a */,
 				DAF04BF027A71D9D005DBBE3 /* StoreKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				4DCDA63CAA144D67F2AB0554 /* libPods-poke.a */,

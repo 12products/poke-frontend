@@ -4,6 +4,8 @@ import shallow from 'zustand/shallow'
 
 import { IAP_SKUs, PLATFORM_IAP_SKUs } from '../constants/iap'
 import { useAuthStore, useIAPStore } from '../store'
+import useFetch from './useFetch'
+import { POKE_URL } from '../constants'
 
 function useIAP() {
   const { products, setProducts, isProcessing, setIsProcessing } = useIAPStore(
@@ -15,7 +17,8 @@ function useIAP() {
     }),
     shallow
   )
-  const { setActivePlan } = useAuthStore()
+  const { setActiveSubscription } = useAuthStore()
+  const { fetch } = useFetch()
 
   useEffect(() => {
     async function initializeIAP() {
@@ -43,23 +46,35 @@ function useIAP() {
 
     // Listen to any purchases within the app
     InAppPurchases.setPurchaseListener(
-      ({ responseCode, results, errorCode }) => {
+      async ({ responseCode, results, errorCode }) => {
         // A successful purchase was made
         if (responseCode === InAppPurchases.IAPResponseCode.OK) {
           // We need to process and acknowledge each purchase
           results?.forEach(async (purchase) => {
-            if (!purchase.acknowledged) {
-              InAppPurchases.finishTransactionAsync(purchase, true)
+            if (purchase.purchaseState === 1) {
+              // Verify the subscription with Apple and save it to our database
+              const response = await fetch(`${POKE_URL}/subscriptions`, {
+                method: 'POST',
+                body: purchase.transactionReceipt,
+              })
+
+              if (response.status === 201) {
+                setActiveSubscription(purchase.productId)
+              }
             }
 
-            if (purchase.purchaseState === 1) {
-              setActivePlan(purchase.productId)
+            // Acknowledge the transaction with Apple
+            if (!purchase.acknowledged) {
+              InAppPurchases.finishTransactionAsync(purchase, true)
             }
           })
         } else if (
           responseCode === InAppPurchases.IAPResponseCode.USER_CANCELED
         ) {
-          console.log('User canceled the subscription purchase.')
+          const response = await fetch(`${POKE_URL}/subscriptions`, {
+            method: 'DELETE',
+          })
+          setActiveSubscription(null)
         } else {
           console.error(
             `Something went wrong with the purchase. Received errorCode ${errorCode}`

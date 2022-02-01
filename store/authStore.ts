@@ -14,8 +14,8 @@ export type AppState = {
   setHasOnboarded: (hasOnboarded: boolean) => void
   user: any
   setUser: (user: any) => void
-  activePlan: string | null
-  setActivePlan: (activePlan: string | null) => void
+  activeSubscription: string | null
+  setActiveSubscription: (activeSubscription: string | null) => void
 }
 
 export const useAuthStore = create<AppState>(
@@ -45,6 +45,7 @@ export const useAuthStore = create<AppState>(
           isAuthenticated: !!session,
           user,
           hasOnboarded: user?.onboarded,
+          activeSubscription: user?.activeSubscription,
         })
       },
       hasHydrated: false,
@@ -56,8 +57,9 @@ export const useAuthStore = create<AppState>(
           user,
           hasOnboarded: user?.hasOnboarded,
         }),
-      activePlan: null,
-      setActivePlan: (activePlan: string | null) => set({ activePlan }),
+      activeSubscription: null,
+      setActiveSubscription: (activeSubscription: string | null) =>
+        set({ activeSubscription }),
     }),
     {
       name: 'PokeStore',
