@@ -1,4 +1,4 @@
-import { View, Text, Alert } from 'react-native'
+import { View, Text, Alert, AlertButton } from 'react-native'
 
 export const ErrorText = ({
   name,
@@ -19,7 +19,9 @@ export const ErrorText = ({
 export const ErrorAlert = ({
   title,
   message,
+  buttons = [{ text: 'OK' }],
 }: {
   title: string
   message: string
-}) => Alert.alert(title, message, [{ text: 'OK' }])
+  buttons?: AlertButton[]
+}) => Alert.alert(title, message, buttons)

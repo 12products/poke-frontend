@@ -16,13 +16,15 @@ export const ReminderItem = ({
 }) => {
   const reminderTime = new Date(notificationTime)
   const { fetch } = useFetch()
-  // Animate list to close gap when item is deleted
-  LayoutAnimation.configureNext(LayoutAnimation.Presets.spring)
   const removeReminder = useReminderStore((state) => state.removeReminder)
+
   const handleOnSnap = async (id: string, snapId: string) => {
     if (snapId === 'noAction') {
       return
     }
+
+    // Animate list to close gap when item is deleted
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring)
 
     try {
       await fetch(`${POKE_URL}/reminders/${id}`, {
@@ -30,7 +32,10 @@ export const ReminderItem = ({
       })
       removeReminder(id)
     } catch (e) {
-      ErrorAlert({ title: 'Error deleting', message: 'Try again!' })
+      ErrorAlert({
+        title: 'Yikes!',
+        message: "We couldn't delete your reminder. Try again later",
+      })
     }
   }
 
@@ -44,7 +49,7 @@ export const ReminderItem = ({
       onSnapStart={({ nativeEvent }) => handleOnSnap(id, nativeEvent.id)}
       boundaries={{ right: 0 }}
     >
-      <View style={tw`bg-brand-${color} p-4`}>
+      <View style={tw`bg-brand-${color} p-4 z-20 relative`}>
         <View style={tw`flex flex-row items-center`}>
           <Text style={tw`text-5xl py-2 mr-2`}>{emoji}</Text>
           <Text style={tw`text-2xl text-white font-bold uppercase`}>
