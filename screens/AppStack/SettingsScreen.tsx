@@ -5,6 +5,8 @@ import {
   SafeAreaView,
   ActivityIndicator,
 } from 'react-native'
+import { FontAwesome5 } from '@expo/vector-icons'
+import * as Linking from 'expo-linking'
 
 import { SettingsScreenNavigationProps } from '../../types'
 import useIAP from '../../hooks/useIAP'
@@ -21,7 +23,12 @@ function SettingsScreen({ navigation }: SettingsScreenNavigationProps) {
         <View>
           {activeSubscription ? (
             <>
-              <Text style={tw`text-6xl mb-2 text-center`}>🙏</Text>
+              <FontAwesome5
+                name="smile"
+                size={80}
+                color="black"
+                style={tw`mb-2 text-center`}
+              />
 
               <Text
                 style={tw`text-2xl uppercase font-bold px-4 mb-2 text-center`}
@@ -58,8 +65,13 @@ function SettingsScreen({ navigation }: SettingsScreenNavigationProps) {
                 </Text>
 
                 <Text style={tw`text-2xl mb-2 text-center`}>
-                  We know, another app with subscriptions. 🙄 But hey, it costs
-                  less than a coffee.
+                  We know, another app with subscriptions.{' '}
+                  <FontAwesome5
+                    name="meh-rolling-eyes"
+                    size={24}
+                    color="black"
+                  />{' '}
+                  But hey, it costs less than a coffee.
                 </Text>
 
                 <Text style={tw`uppercase font-bold text-4xl text-center`}>
@@ -86,6 +98,20 @@ function SettingsScreen({ navigation }: SettingsScreenNavigationProps) {
           )}
         </View>
       )}
+
+      <TouchableOpacity
+        style={tw`w-full bg-black mt-4`}
+        activeOpacity={1}
+        onPress={() => {
+          Linking.openURL('mailto:amorriscode@gmail.com')
+        }}
+      >
+        <Text
+          style={tw`text-4xl text-center font-bold uppercase p-2 text-white`}
+        >
+          Contact Us
+        </Text>
+      </TouchableOpacity>
 
       <TouchableOpacity
         style={tw`w-full bg-black mt-4`}

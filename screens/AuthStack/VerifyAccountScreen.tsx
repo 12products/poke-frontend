@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useCallback, useEffect, useState } from 'react'
 import * as yup from 'yup'
+import { FontAwesome5 } from '@expo/vector-icons'
 
 import { supabase } from '../../lib/supabase'
 import {
@@ -113,7 +114,7 @@ function VerifyAccountScreen({
           onPress={handleSubmit(verifyOTP)}
           style={tw`flex flex-row justify-end w-full mt-4`}
         >
-          <Text style={tw`text-4xl`}>🔑 </Text>
+          <FontAwesome5 name="key" size={32} color="white" style={tw`mr-2`} />
           <Text style={tw`text-5xl text-white font-bold uppercase`}>
             Let Me In
           </Text>

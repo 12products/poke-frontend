@@ -98,7 +98,10 @@ function CreateReminderScreen({
       addReminder(createdReminder)
       navigation.navigate('Reminders')
     } catch (error: any) {
-      ErrorAlert({ title: 'Error Creating Reminder', message: error?.message })
+      ErrorAlert({
+        title: 'Uh oh!',
+        message: 'We failed to create your reminder. Try again later.',
+      })
     }
   }
 
@@ -190,8 +193,14 @@ function CreateReminderScreen({
           onPress={handleSubmit(createReminder, () =>
             scrollRef?.current?.scrollTo({ y: 0 })
           )}
+          style={tw`w-full bg-black my-8 flex justify-center`}
+          activeOpacity={1}
         >
-          <Text style={tw`text-6xl text-center p-4 mt-8`}>✅</Text>
+          <Text
+            style={tw`text-4xl text-center font-bold uppercase p-2 text-white`}
+          >
+            Create
+          </Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

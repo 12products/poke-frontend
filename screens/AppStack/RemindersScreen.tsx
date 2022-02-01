@@ -8,6 +8,8 @@ import {
 import { useFocusEffect } from '@react-navigation/native'
 import { useState, useCallback } from 'react'
 import shallow from 'zustand/shallow'
+import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome5 } from '@expo/vector-icons'
 
 import { RemindersScreenNavigationProps, Reminder } from '../../types'
 import { ErrorAlert } from '../utils'
@@ -16,6 +18,7 @@ import { POKE_URL } from '../../constants'
 import tw from '../../lib/tailwind'
 import { useReminderStore } from '../../store'
 import { ReminderItem } from '../../components'
+import useAuth from '../../hooks/useAuth'
 
 function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
   const [reminders, setReminders] = useReminderStore(
@@ -24,6 +27,7 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
   )
   const [buttonHeight, setButtonHeight] = useState(0)
   const { fetch } = useFetch()
+  const { activeSubscription } = useAuth()
 
   useFocusEffect(
     useCallback(() => {
@@ -33,6 +37,7 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
         try {
           const response = await fetch(`${POKE_URL}/reminders`)
           const updatedReminders = await response.json()
+
           if (!Array.isArray(updatedReminders)) {
             throw new Error('Check your network and retry!')
           }
@@ -42,8 +47,8 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
           }
         } catch (error: any) {
           ErrorAlert({
-            title: 'Unknown Error Fetching Pokes',
-            message: error?.message,
+            title: 'Whoops!',
+            message: 'We failed to get your reminders. Try again later.',
           })
         }
       }
@@ -60,6 +65,24 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
     setButtonHeight(e.nativeEvent.layout.height)
   }
 
+  const handleCreateReminder = () => {
+    if (!activeSubscription && reminders.length >= 1) {
+      ErrorAlert({
+        title: 'Help Us Build This',
+        message:
+          "Building this thing costs us money. If you subscribe, you can make as many reminders as you'd like.",
+        buttons: [
+          { text: 'No Thanks' },
+          { text: 'Subscribe', onPress: () => navigation.navigate('Settings') },
+        ],
+      })
+
+      return
+    }
+
+    navigation.navigate('CreateReminder')
+  }
+
   return (
     <ScrollView onLayout={handleLayoutChange}>
       <View
@@ -71,9 +94,9 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
         <TouchableOpacity
           style={tw`h-full w-full flex justify-center items-center bg-white`}
           activeOpacity={1}
-          onPress={() => navigation.navigate('CreateReminder')}
+          onPress={handleCreateReminder}
         >
-          <Text style={tw`text-9xl font-bold uppercase p-2`}>📣</Text>
+          <FontAwesome name="hand-pointer-o" size={160} color="black" />
         </TouchableOpacity>
       </View>
 
@@ -89,13 +112,21 @@ function ReminderScreen({ navigation }: RemindersScreenNavigationProps) {
         </Text>
       </TouchableOpacity>
 
-      <View style={tw`bg-white`}>
-        {reminders.map((reminder: Reminder) => (
-          <View style={tw`bg-black`}>
-            <ReminderItem key={reminder.id} reminder={reminder} />
-          </View>
-        ))}
-      </View>
+      {reminders.length > 0 && (
+        <View style={tw`bg-white`}>
+          {reminders.map((reminder: Reminder) => (
+            <View style={tw`bg-red-600 relative`} key={reminder.id}>
+              <FontAwesome5
+                name="trash-alt"
+                size={48}
+                color="white"
+                style={tw`absolute top-8 right-10 z-0`}
+              />
+              <ReminderItem reminder={reminder} />
+            </View>
+          ))}
+        </View>
+      )}
     </ScrollView>
   )
 }

@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar'
 import { View, ScrollView, Text, TouchableOpacity } from 'react-native'
 import { useRef, useState } from 'react'
 import PhoneInput from 'react-native-phone-number-input'
+import { FontAwesome } from '@expo/vector-icons'
 
 import { supabase } from '../../lib/supabase'
 import { ErrorAlert } from '../utils'
@@ -29,8 +30,8 @@ function SignInScreen({ navigation, route }: SignInScreenNavigationProp) {
 
     if (error) {
       ErrorAlert({
-        title: 'Error signing in',
-        message: error?.message,
+        title: 'Darn!',
+        message: 'There was an issue signing you in. Try again later.',
       })
 
       return
@@ -69,7 +70,7 @@ function SignInScreen({ navigation, route }: SignInScreenNavigationProp) {
         <PhoneInput
           ref={phoneInput}
           defaultCode="US"
-          layout="first"
+          layout="second"
           onChangeText={(phone) => {
             setPhoneNumber(phone)
           }}
@@ -98,10 +99,15 @@ function SignInScreen({ navigation, route }: SignInScreenNavigationProp) {
         )}
 
         <TouchableOpacity
-          style={tw`flex flex-row justify-end w-full`}
+          style={tw`flex flex-row items-center justify-end w-full`}
           onPress={logIn}
         >
-          <Text style={tw`text-4xl`}>👉</Text>
+          <FontAwesome
+            name="hand-o-right"
+            size={32}
+            color="white"
+            style={tw`mr-2`}
+          />
           <Text style={tw`text-5xl text-white font-bold uppercase`}>
             Onward
           </Text>
