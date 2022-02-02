@@ -20,7 +20,7 @@ import {
   ChangeFieldInput,
 } from '../../types'
 import { ErrorAlert } from '../utils'
-import { getRandomBrandColor } from '../../lib/utils'
+import { BRAND_COLORS } from '../../constants'
 import useFetch from '../../hooks/useFetch'
 import { useReminderStore } from '../../store'
 import { POKE_URL } from '../../constants'
@@ -42,8 +42,6 @@ export const days: Day[] = [
   { id: 6, name: 'Saturday' },
 ]
 
-const reminderColor = getRandomBrandColor()
-
 function CreateReminderScreen({
   navigation,
 }: CreateReminderScreenNavigationProps) {
@@ -52,6 +50,8 @@ function CreateReminderScreen({
   const [selectedDays, setSelectedDays] = useState<number[]>([])
   const [time, setTime] = useState<Date>(defaultNotificationTime)
   const { fetch } = useFetch()
+  const reminders = useReminderStore((state) => state.reminders)
+  const reminderColor = BRAND_COLORS[reminders.length % BRAND_COLORS.length]
 
   const {
     register,

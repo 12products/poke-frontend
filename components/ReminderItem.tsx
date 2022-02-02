@@ -53,8 +53,8 @@ export const ReminderItem = ({
         <View style={tw`flex flex-row items-center`}>
           <Text style={tw`text-5xl py-2 mr-2`}>{emoji}</Text>
           <Text style={tw`text-2xl text-white font-bold uppercase`}>
-            {text.slice(0, 18)}
-            {text.length > 18 ? '...' : ''}
+            {text?.slice(0, 18)}
+            {text?.length > 18 ? '...' : ''}
           </Text>
         </View>
 
@@ -62,11 +62,11 @@ export const ReminderItem = ({
           {`${reminderTime.getHours() % 12}:${
             reminderTime.getMinutes() === 0 ? '00' : reminderTime.getMinutes()
           }${reminderTime.getHours() > 12 ? 'pm' : 'am'}`}{' '}
-          on{' '}
-          {notificationDays
-            .sort((dayA, dayB) => dayA - dayB)
-            .map((num) => numToDays[num].slice(0, 3))
-            .join(', ')}
+          {!!notificationDays.length &&
+            `ON ${notificationDays
+              .sort((dayA, dayB) => dayA - dayB)
+              .map((num) => numToDays[num].slice(0, 3))
+              .join(', ')}`}
         </Text>
       </View>
     </Interactable.View>

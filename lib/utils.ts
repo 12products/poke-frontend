@@ -15,8 +15,9 @@ export const numToDays = [
   'Saturday',
 ]
 
-export const getRandomBrandColor = () =>
-  BRAND_COLORS[Math.floor(Math.random() * BRAND_COLORS.length)]
+export const getRandomBrandColor = (): string => {
+  return BRAND_COLORS[Math.floor(Math.random() * BRAND_COLORS.length)]
+}
 
 export const getHexCodeForBrandColor = (color: string) =>
   // @ts-ignore
