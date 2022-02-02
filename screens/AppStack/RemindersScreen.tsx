@@ -8,8 +8,7 @@ import {
 import { useFocusEffect } from '@react-navigation/native'
 import { useState, useCallback } from 'react'
 import shallow from 'zustand/shallow'
-import { FontAwesome } from '@expo/vector-icons'
-import { FontAwesome5 } from '@expo/vector-icons'
+import { FontAwesome, FontAwesome5 } from '@expo/vector-icons'
 
 import { RemindersScreenNavigationProps, Reminder } from '../../types'
 import { ErrorAlert } from '../utils'
