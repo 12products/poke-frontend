@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Switch,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -52,6 +53,7 @@ function CreateReminderScreen({
   const { fetch } = useFetch()
   const reminders = useReminderStore((state) => state.reminders)
   const reminderColor = BRAND_COLORS[reminders.length % BRAND_COLORS.length]
+  const [isLoading, setIsLoading] = useState(false)
 
   const {
     register,
@@ -83,6 +85,9 @@ function CreateReminderScreen({
   const addReminder = useReminderStore((state) => state.addReminder)
 
   const createReminder = async (data: CreateReminderInput) => {
+    if (isLoading) return
+    setIsLoading(true)
+
     try {
       const response = await fetch(`${POKE_URL}/reminders`, {
         method: 'POST',
@@ -103,6 +108,8 @@ function CreateReminderScreen({
         message: 'We failed to create your reminder. Try again later.',
       })
     }
+
+    setIsLoading(false)
   }
 
   useEffect(() => {
@@ -195,12 +202,17 @@ function CreateReminderScreen({
           )}
           style={tw`w-full bg-black my-8 flex justify-center`}
           activeOpacity={1}
+          disabled={isLoading}
         >
-          <Text
-            style={tw`text-4xl text-center font-bold uppercase p-2 text-white`}
-          >
-            Create
-          </Text>
+          {isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <Text
+              style={tw`text-4xl text-center font-bold uppercase p-2 text-white`}
+            >
+              Create
+            </Text>
+          )}
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

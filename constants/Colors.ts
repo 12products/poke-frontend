@@ -1,9 +1,1 @@
-export const BRAND_COLORS = [
-  'yellow',
-  'orange',
-  'red',
-  'pink',
-  'purple',
-  'blue',
-  'green',
-]
+export const BRAND_COLORS = ['red', 'pink', 'purple', 'blue', 'green']

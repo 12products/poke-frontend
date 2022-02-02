@@ -2,8 +2,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'brand-yellow': '#F3EA68',
-        'brand-orange': '#F8A662',
         'brand-red': '#FF5C67',
         'brand-pink': '#DE68C8',
         'brand-purple': '#8A58DA',
