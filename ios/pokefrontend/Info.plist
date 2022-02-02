@@ -39,6 +39,13 @@
 		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
+			<key>https://poke-backend.onrender.com</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
 			<key>localhost</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
