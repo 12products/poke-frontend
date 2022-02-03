@@ -92,7 +92,11 @@ function CreateReminderScreen({
     try {
       const response = await fetch(`${POKE_URL}/reminders`, {
         method: 'POST',
-        body: JSON.stringify({ ...data, color: reminderColor }),
+        body: JSON.stringify({
+          ...data,
+          color: reminderColor,
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        }),
         headers: {
           'Content-Type': 'application/json',
         },
