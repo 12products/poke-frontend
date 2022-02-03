@@ -39,6 +39,12 @@ export const ReminderItem = ({
     }
   }
 
+  // Get the hours but make sure 0 --> 12
+  const rawHours = reminderTime.getHours()
+  const hours = rawHours % 12 || 12
+  const minutes = `${reminderTime.getMinutes()}`.padStart(2, '0')
+  const period = rawHours > 12 ? 'pm' : 'am'
+
   return (
     <Interactable.View
       horizontalOnly={true}
@@ -59,14 +65,11 @@ export const ReminderItem = ({
         </View>
 
         <Text style={tw`uppercase font-bold text-white`}>
-          {`${reminderTime.getHours() % 12}:${
-            reminderTime.getMinutes() === 0 ? '00' : reminderTime.getMinutes()
-          }${reminderTime.getHours() > 12 ? 'pm' : 'am'}`}{' '}
-          {!!notificationDays.length &&
-            `ON ${notificationDays
-              .sort((dayA, dayB) => dayA - dayB)
-              .map((num) => numToDays[num].slice(0, 3))
-              .join(', ')}`}
+          {`${hours}:${minutes}${period}`}{' '}
+          {`ON ${notificationDays
+            .sort((dayA, dayB) => dayA - dayB)
+            .map((num) => numToDays[num].slice(0, 3))
+            .join(', ')}`}
         </Text>
       </View>
     </Interactable.View>

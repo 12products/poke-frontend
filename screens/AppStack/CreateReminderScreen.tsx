@@ -29,7 +29,7 @@ import tw from '../../lib/tailwind'
 
 export const createReminderSchema = yup.object().shape({
   text: yup.string().required(),
-  notificationDays: yup.array().of(yup.number()),
+  notificationDays: yup.array().of(yup.number()).min(1).required(),
   notificationTime: yup.string(),
 })
 
@@ -86,6 +86,7 @@ function CreateReminderScreen({
 
   const createReminder = async (data: CreateReminderInput) => {
     if (isLoading) return
+
     setIsLoading(true)
 
     try {
@@ -96,10 +97,12 @@ function CreateReminderScreen({
           'Content-Type': 'application/json',
         },
       })
-      const createdReminder = await response.json()
-      if (!createdReminder) {
-        throw new Error('Try again!')
+
+      if (response.status !== 201) {
+        throw new Error('Failed to create reminder!')
       }
+
+      const createdReminder = await response.json()
       addReminder(createdReminder)
       navigation.navigate('Reminders')
     } catch (error: any) {
@@ -131,6 +134,16 @@ function CreateReminderScreen({
 
     setSelectedDays(newSelectedDays)
     setValue('notificationDays', newSelectedDays)
+  }
+
+  const handleCreateReminder = () => {
+    handleSubmit(createReminder, (e) => {
+      // Scroll to the top of the form
+      // if the user has a text error
+      if (e.text) {
+        scrollRef?.current?.scrollTo({ y: 0 })
+      }
+    })()
   }
 
   return (
@@ -195,12 +208,17 @@ function CreateReminderScreen({
             </View>
           )
         })}
+        {errors?.notificationDays && (
+          <Text
+            style={tw`text-2xl bg-black py-2 text-white font-bold uppercase text-center`}
+          >
+            ☝️ Please pick a day.
+          </Text>
+        )}
 
         <TouchableOpacity
-          onPress={handleSubmit(createReminder, () =>
-            scrollRef?.current?.scrollTo({ y: 0 })
-          )}
-          style={tw`w-full bg-black my-8 flex justify-center`}
+          onPress={handleCreateReminder}
+          style={tw`w-full bg-black my-8 flex justify-center min-h-14`}
           activeOpacity={1}
           disabled={isLoading}
         >
