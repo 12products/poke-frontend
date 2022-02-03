@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useCallback, useState, useEffect, useRef } from 'react'
+import { useCallback, useState, useEffect, useRef, useMemo } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import * as yup from 'yup'
 
@@ -26,6 +26,7 @@ import useFetch from '../../hooks/useFetch'
 import { useReminderStore } from '../../store'
 import { POKE_URL } from '../../constants'
 import tw from '../../lib/tailwind'
+import { getRandomBrandColor } from '../../lib/utils'
 
 export const createReminderSchema = yup.object().shape({
   text: yup.string().required(),
@@ -52,7 +53,15 @@ function CreateReminderScreen({
   const [time, setTime] = useState<Date>(defaultNotificationTime)
   const { fetch } = useFetch()
   const reminders = useReminderStore((state) => state.reminders)
-  const reminderColor = BRAND_COLORS[reminders.length % BRAND_COLORS.length]
+
+  const reminderColor = useMemo(
+    () =>
+      reminders.length
+        ? BRAND_COLORS[reminders.length % BRAND_COLORS.length]
+        : getRandomBrandColor(),
+    []
+  )
+
   const [isLoading, setIsLoading] = useState(false)
 
   const {
