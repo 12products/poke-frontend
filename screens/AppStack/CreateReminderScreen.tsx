@@ -13,6 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useCallback, useState, useEffect, useRef, useMemo } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import * as yup from 'yup'
+import { FontAwesome5 } from '@expo/vector-icons'
 
 import {
   Day,
@@ -166,6 +167,13 @@ function CreateReminderScreen({
         ref={scrollRef}
         contentContainerStyle={tw`bg-brand-${reminderColor}`}
       >
+        <TouchableOpacity
+          style={tw`mx-8`}
+          activeOpacity={1}
+          onPress={() => navigation.navigate('Reminders')}
+        >
+          <FontAwesome5 name="arrow-circle-left" size={30} color="black" />
+        </TouchableOpacity>
         <Text
           style={tw`text-6xl text-white font-bold uppercase text-center w-full px-4 mt-8 mb-4`}
         >
