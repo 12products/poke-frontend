@@ -16,7 +16,7 @@ export const numToDays = [
 ]
 
 export const getRandomBrandColor = (): string => {
-  return BRAND_COLORS[Math.floor(Math.random() * BRAND_COLORS.length)]
+  return BRAND_COLORS[(Math.random() * BRAND_COLORS.length) | 0]
 }
 
 export const getHexCodeForBrandColor = (color: string) =>

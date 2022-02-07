@@ -18,7 +18,14 @@ function SettingsScreen({ navigation }: SettingsScreenNavigationProps) {
   const { activeSubscription, logOut } = useAuth()
 
   return (
-    <SafeAreaView style={tw`h-full flex justify-center`}>
+    <SafeAreaView style={tw`h-full`}>
+      <TouchableOpacity
+        style={tw`mx-4 mb-8`}
+        activeOpacity={1}
+        onPress={() => navigation.navigate('Reminders')}
+      >
+        <Text style={tw`uppercase font-bold text-xl`}>Back</Text>
+      </TouchableOpacity>
       {products.length > 0 && (
         <View>
           {activeSubscription ? (
