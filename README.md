@@ -16,3 +16,7 @@ Poke is a personal accountability system. You setup recurring goals on the platf
 
 - User can see dashboard summarizing their reminders
 - User can see data visualization of their streaks
+
+## Developer Joke
+
+Why did the React component break up with its state? Because it couldn't commit to a stable relationship! 💔
