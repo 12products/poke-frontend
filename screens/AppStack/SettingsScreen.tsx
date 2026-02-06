@@ -123,6 +123,18 @@ function SettingsScreen({ navigation }: SettingsScreenNavigationProps) {
       <TouchableOpacity
         style={tw`w-full bg-black mt-4`}
         activeOpacity={1}
+        onPress={() => navigation.navigate('SystemStatus')}
+      >
+        <Text
+          style={tw`text-4xl text-center font-bold uppercase p-2 text-white`}
+        >
+          System Status
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={tw`w-full bg-black mt-4`}
+        activeOpacity={1}
         onPress={async () => {
           await logOut()
         }}

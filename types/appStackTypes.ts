@@ -29,6 +29,31 @@ export type SettingsScreenNavigationProps = NativeStackScreenProps<
   'Settings'
 >
 
+export type SystemStatusScreenNavigationProps = NativeStackScreenProps<
+  AppStackParamList,
+  'SystemStatus'
+>
+
+export interface ServiceStatus {
+  name: string
+  status: 'healthy' | 'degraded' | 'down'
+  latencyMs?: number
+  message?: string
+}
+
+export interface SystemStatus {
+  status: 'healthy' | 'degraded' | 'down'
+  version: string
+  uptimeSeconds: number
+  timestamp: string
+  services: ServiceStatus[]
+  memory: {
+    heapUsedMB: number
+    heapTotalMB: number
+    rssMB: number
+  }
+}
+
 export interface Reminder {
   id: string
   text: string

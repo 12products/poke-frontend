@@ -28,4 +28,5 @@ export type AppStackParamList = {
   Reminders: undefined
   CreateReminder: undefined
   Settings: undefined
+  SystemStatus: undefined
 }
