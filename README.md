@@ -16,3 +16,19 @@ Poke is a personal accountability system. You setup recurring goals on the platf
 
 - User can see dashboard summarizing their reminders
 - User can see data visualization of their streaks
+
+---
+
+## Developer Jokes (Frontend Edition)
+
+**Q:** Why do frontend developers eat lunch alone?
+**A:** Because they don't know how to join tables.
+
+**Q:** How do you comfort a JavaScript bug?
+**A:** You console it!
+
+**Q:** Why was the CSS developer sad?
+**A:** They had no class.
+
+**Q:** What did the React component say to its child?
+**A:** "I've got to hand these props to you!"
